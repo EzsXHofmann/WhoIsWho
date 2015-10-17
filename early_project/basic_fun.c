@@ -82,15 +82,4 @@ void convert_to_grey(SDL_Surface *img){
 	}
 }
 
-int main(){
-	init_sdl();
-	SDL_Surface *img = load_image("/home/zionlion/Images/test.jpg"); 
-	SDL_Surface *img_loaded = display_image(img);
-	convert_to_grey(img);
-	img_loaded = display_image(img);
-	SDL_FreeSurface(img);
-	SDL_FreeSurface(img_loaded);
-	return 0;
-	
-}
 
