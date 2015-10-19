@@ -6,18 +6,18 @@
 //DW = fenêtre de détection
 //ii = image intégrale
 
-void changeparameters(int *h, int *w, int *inc1, int *inc2, int type)
+void changeparameters(int *w, int *h, int *incw, int *inch, int type)
 {
     if (type == 1)
-        *h = 0, *w = 1, *inc1 = 2, *inc2 = 1;
+        *w = 1, *h = 0, *incw = 2, *inch = 1;
     if (type == 2)
-        *h = 0, *w = 2, *inc1 = 3, *inc2 = 1;
+        *w = 2, *h = 0, *incw = 3, *inch = 1;
     if (type == 3)
-        *h = 1, *w = 0, *inc1 = 1, *inc2 = 2;
+        *w = 0, *h = 1, *incw = 1, *inch = 2;
     if (type == 4)
-        *h = 2, *w = 0, *inc1 = 1, *inc2 = 3;
+        *w = 0, *h = 2, *incw = 1, *inch = 3;
     if (type == 5)
-        *h = 1, *w = 1, *inc1 = 2, *inc2 = 2;
+        *w = 1, *h = 1, *incw = 2, *inch = 2;
 }
 
 void haarFeatures(int ii[], int width, int height)
@@ -26,7 +26,7 @@ void haarFeatures(int ii[], int width, int height)
     if (file == NULL)
         printf("ERROR OPENING FILE\n");
 
-    int c = 24, ori, res, err, w2, h2, inc1, inc2;
+    int c = 24, ori, res, err, w2, h2, incw, inch;
 
     //La taille de la DW doit être <= à la taille de l'ii
     while (c <= width && c <= height)
@@ -38,20 +38,20 @@ void haarFeatures(int ii[], int width, int height)
             {
                 for (int type = 1; type < 6; type++)
                 {
-                    changeparameters(&h2, &w2, &inc1, &inc2, type);
+                    changeparameters(&w2, &h2, &incw, &inch, type);
 
                     fprintf(file, "(%d, %d, %d, %d) :\n", type, i, j, c);
                     //Différentes tailles du feature
-                    for (int h = h2; h < c; h += inc2)
+                    for (int h = h2; h < c; h += inch)
                     {
-                        for (int w = w2; w < c; w += inc1)
+                        for (int w = w2; w < c; w += incw)
                         {
                             //Positions du feature
                             for (int y = 0; y + h <= c; y++)
                             {
                                 for (int x = 0; x + w <= x; x++)
                                 {
-                                    ori = j*width + i + width * y + x;
+                                    ori = (j + y)*width + i + x;
 
                                     res = calcul(ii, type, w, h, width, x, y, ori);
 

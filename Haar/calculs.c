@@ -31,7 +31,7 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
                  }
                  else
                  {
-                     s1 = ii[ori + w/2 + h*width] + ii[ori - 1 - width]
+                     s1 = ii[ori + w/2 + h*width]
                         - ii[ori + w/2 - width] - ii[ori - 1 + h*width];
                      s2 = ii[ori + w + h*width] - ii[ori + w/2 + h*width];
              
@@ -46,31 +46,34 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
     {
         if (x == 0 && y == 0)
         {
-            return (ii[ori + w + h*width] - 2*ii[ori + (w/3)*2 + h*width]
-                    + ii[ori + w/3 + h*width]);
+            return (ii[ori + w + h*width] - 2*ii[ori + ((w + 1)/3) + h*width]
+                    + 2*ii[ori + h*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                return (ii[ori + w + h*width] - 2*ii[ori + (w/3)*2 + h*width]
-                        + ii[ori + w/3 + h* width] - ii[ori + w - width]
-                        + 2*ii[ori + (w/3)*2 - width] + 2*ii[ori + w/3 - width]
+                return (ii[ori + w + h*width]
+                        - 2*ii[ori + ((w + 1)/3) + h*width]
+                        + 2*ii[ori + h*width] - ii[ori + w - width]
+                        + 2*ii[ori + ((w + 1)/3) - width] - 2*ii[ori - width]
                         - ii[ori - 1 + width] + ii[ori - 1 - width]);
             }
             else
             {
                 if (x == 0)
                 {
-                    return (ii[ori + w + h*width] - 2*ii[ori + (w/3)*2 + h*width]
-                        + ii[ori + w/3 + h* width] - ii[ori + w - width]
-                        + 2*ii[ori + (w/3)*2 - width] + 2*ii[ori + w/3 - width]
-                        + ii[ori - 1 - width]);
+                    return (ii[ori + w + h*width]
+                            - 2*ii[ori + ((w + 1)/3) + h*width]
+                            + 2*ii[ori + h*width] - ii[ori + w - width]
+                            + 2*ii[ori + ((w + 1)/3) - width]
+                            - 2*ii[ori - width]);
                 }
                 else
                 {
-                    return (ii[ori + w + h*width] - 2*ii[ori + (w/3)*2 + h*width]
-                        + ii[ori + w/3 + h* width] - ii[ori - 1 + width]); 
+                    return (ii[ori + w + h*width]
+                            - 2*ii[ori + ((w + 1)/3) + h*width]
+                            + 2*ii[ori + h*width] - ii[ori - 1 + width]); 
                 }
             }
         }
@@ -78,8 +81,88 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
 
     if (type == 3)
     {
-
+        if (x == 0 && y == 0)
+        {
+            return (2*ii[ori + w] - ii[ori + w + h*width]);
+        }
+        else
+        {
+            if (x != 0 && y != 0)
+            {
+                return (2*ii[ori + w] - ii[ori + w + h*width]
+                        - ii[ori + w - width]
+                        + ii[ori - 1 + h*width] - 2*ii[ori - 1]
+                        + ii[ori - 1 - width]);
+            }
+            else
+            {
+                if (x == 0)
+                {
+                    return (2*ii[ori + w] - ii[ori + w + h*width]
+                            - ii[ori + w - width]);
+                }
+                else
+                {
+                    return (2*ii[ori + w] - ii[ori + w + h*width]
+                            + ii[ori - 1 + h*width] - 2*ii[ori - 1]); 
+                }
+            }
+        }
     }
+
+    if (type == 4)
+    {
+        if (x == 0 && y == 0)
+        {
+            return ();
+        }
+        else
+        {
+            if (x != 0 && y != 0)
+            {
+                return ();
+            }
+            else
+            {
+                if (x == 0)
+                {
+                    return ();
+                }
+                else
+                {
+                    return (); 
+                }
+            }
+        }
+    }
+
+    if (type == 5)
+    {
+        if (x == 0 && y == 0)
+        {
+            return ();
+        }
+        else
+        {
+            if (x != 0 && y != 0)
+            {
+                return ();
+            }
+            else
+            {
+                if (x == 0)
+                {
+                    return ();
+                }
+                else
+                {
+                    return (); 
+                }
+            }
+        }
+    }
+
+
 
     return 0;
 }
