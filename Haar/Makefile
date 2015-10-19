@@ -5,15 +5,15 @@ CFLAGS= -Wall -Wextra -Werror -std=c99 -O3
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
  
-SRC= features2.c
+SRC= calculs.c
 
 OBJ= ${SRC:.c=.o}
  
-all: features2
+all: calculs
  
-features: ${OBJ}
+calculs: ${OBJ}
  
 clean:
 	rm -f *~ *.o
-	rm -f features2 
+	rm -f calculs 
  
