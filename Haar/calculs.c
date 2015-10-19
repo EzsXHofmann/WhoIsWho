@@ -3,77 +3,69 @@
 
 int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
 {
-    int s1, s2;
 
     if (type == 1)
     {
         if (x == 0 && y == 0)
         {
-            s1 = ii[ori + w + h*width];
-            s2 = ii[ori + w/2 + h*width];
+            return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                s1 = ii[ori + w/2 + h*width] + ii[ori - 1 - width]
-                   - ii[ori + w/2 - width] - ii[ori - 1 + h*width];
-                s2 = ii[ori + w + h*width] + ii[ori + w/2 - width]
-                   - ii[ori + w - width] - ii[ori + w/2 + h*width];
-             }
-             else
-             {
-                 if (x == 0)
-                 {
-                     s1 = ii[ori + w/2 + h*width] - ii[ori + w/2 - width];
-                     s2 = ii[ori + w + h*width] + ii[ori + w/2 - width]
-                        - ii[ori + w - width] - ii[ori + w/2 + h*width];
-                 }
-                 else
-                 {
-                     s1 = ii[ori + w/2 + h*width]
-                        - ii[ori + w/2 - width] - ii[ori - 1 + h*width];
-                     s2 = ii[ori + w + h*width] - ii[ori + w/2 + h*width];
-             
-                 }
-             }
+                return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]
+                        + ii[ori + w - width] - 2*[ori + w/2 - width]
+                        - ii[ori - 1 + h*width] + ii[ori - 1 - width]);
+            }
+            else
+            {
+                if (x == 0)
+                {
+                    return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]
+                            + ii[ori + w - width] - 2*[ori + w/2 - width]);
+                }
+                else
+                {
+                    return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]
+                            - ii[ori - 1 + h*width]);
+                }
+            }
         }
-
-        return s1 - s2;
     }
 
     if (type == 2)
     {
         if (x == 0 && y == 0)
         {
-            return (ii[ori + w + h*width] - 2*ii[ori + ((w + 1)/3) + h*width]
-                    + 2*ii[ori + h*width]);
+            return (ii[ori + w + h*width] - 2*ii[ori + (2*w)/3 + h*width]
+                    + 2*ii[ori + w/3 h*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
                 return (ii[ori + w + h*width]
-                        - 2*ii[ori + ((w + 1)/3) + h*width]
-                        + 2*ii[ori + h*width] - ii[ori + w - width]
-                        + 2*ii[ori + ((w + 1)/3) - width] - 2*ii[ori - width]
-                        - ii[ori - 1 + width] + ii[ori - 1 - width]);
+                        - 2*ii[ori + (2*w)/3 + h*width]
+                        + 2*ii[ori + w/3 + h*width] - ii[ori + w - width]
+                        + 2*ii[ori + (2*w)/3 - width] - 2*ii[ori + w/3 - width]
+                        - ii[ori - 1 + h*width] + ii[ori - 1 - width]);
             }
             else
             {
                 if (x == 0)
                 {
                     return (ii[ori + w + h*width]
-                            - 2*ii[ori + ((w + 1)/3) + h*width]
-                            + 2*ii[ori + h*width] - ii[ori + w - width]
-                            + 2*ii[ori + ((w + 1)/3) - width]
-                            - 2*ii[ori - width]);
+                            - 2*ii[ori + (2*w)/3 + h*width]
+                            + 2*ii[ori + w/3 + h*width] - ii[ori + w - width]
+                            + 2*ii[ori + (2*w)/3 - width]
+                            - 2*ii[ori + w/3 - width]);
                 }
                 else
                 {
                     return (ii[ori + w + h*width]
-                            - 2*ii[ori + ((w + 1)/3) + h*width]
-                            + 2*ii[ori + h*width] - ii[ori - 1 + width]); 
+                            - 2*ii[ori + (2*w)/3 + h*width]
+                            + 2*ii[ori + w/3 + h*width] - ii[ori - 1 + h*width]);
                 }
             }
         }
@@ -83,28 +75,28 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
     {
         if (x == 0 && y == 0)
         {
-            return (2*ii[ori + w] - ii[ori + w + h*width]);
+            return (2*ii[ori + w + (h/2)*width] - ii[ori + w + h*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                return (2*ii[ori + w] - ii[ori + w + h*width]
-                        - ii[ori + w - width]
-                        + ii[ori - 1 + h*width] - 2*ii[ori - 1]
-                        + ii[ori - 1 - width]);
+                return (2*ii[ori + w + (h/2)*width] - ii[ori + w + h*width]
+                        - ii[ori + w - width] + ii[ori - 1 + h*width]
+                        - 2*ii[ori - 1 + (h/2)*width] + ii[ori - 1 - width]);
             }
             else
             {
                 if (x == 0)
                 {
-                    return (2*ii[ori + w] - ii[ori + w + h*width]
+                    return (2*ii[ori + w + (h/2)*width] - ii[ori + w + h*width]
                             - ii[ori + w - width]);
                 }
                 else
                 {
-                    return (2*ii[ori + w] - ii[ori + w + h*width]
-                            + ii[ori - 1 + h*width] - 2*ii[ori - 1]); 
+                    return (2*ii[ori + w + (h/2)*width] - ii[ori + w + h*width]
+                            + ii[ori - 1 + h*width]
+                            - 2*ii[ori - 1 + (h/2)*width]); 
                 }
             }
         }
@@ -114,23 +106,35 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
     {
         if (x == 0 && y == 0)
         {
-            return ();
+            return (ii[ori + w + h*width] - 2*[ori + w + ((2*h)/3)*width]
+                    + 2*ii[ori + w + (h/3)*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                return ();
+                return (ii[ori + w + h*width] - 2*[ori + w + ((2*h)/3)*width]
+                        + 2*ii[ori + w + (h/3)*width] - ii[ori - 1 + h*width]
+                        + 2*ii[ori - 1 + ((2*h)/3)*width]
+                        - 2*ii[ori - 1 + (h/3)*width]
+                        - ii[ori + w - width] + ii[ori - 1 - width]);
             }
             else
             {
                 if (x == 0)
                 {
-                    return ();
+                    return (ii[ori + w + h*width]
+                            - 2*[ori + w + ((2*h)/3)*width]
+                            + 2*ii[ori + w + (h/3)*width] 
+                            - ii[ori + w - width]);
                 }
                 else
                 {
-                    return (); 
+                    return (ii[ori + w + h*width]
+                            - 2*[ori + w + ((2*h)/3)*width]
+                            + 2*ii[ori + w] - ii[ori - 1 + h*width]
+                            + 2*ii[ori - 1 + ((2*h)/3)*width]
+                            - 2*ii[ori - 1 + (h/3)*width]); 
                 }
             }
         }
@@ -140,29 +144,41 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
     {
         if (x == 0 && y == 0)
         {
-            return ();
+            return (ii[ori + w + h*width] - 2*ii[ori + w/2 + h*width]
+                    - 2*ii[ori + w + (h/2)*width]
+                    + 4*ii[ori + w/2 + (h/2)*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                return ();
+                return (ii[ori + w + h*width] - 2*ii[ori + w/2 + h*width]
+                        - 2*ii[ori + w + (h/2)*width]
+                        + 4*ii[ori + w/2 + (h/2)*width]
+                        + ii[ori - 1 + h*width] - 2*ii[ori - 1 + (h/2)*width]
+                        + ii[ori + w - width] - 2*ii[ori + w/2 - width]
+                        + ii[ori - 1 - width]);
             }
             else
             {
                 if (x == 0)
                 {
-                    return ();
+                    return (ii[ori + w + h*width] - 2*ii[ori + w/2 + h*width]
+                            - 2*ii[ori + w + (h/2)*width]
+                            + 4*ii[ori + w/2 + (h/2)*width]
+                            + ii[ori + w - width] - 2*ii[ori + w/2 - width]);
                 }
                 else
                 {
-                    return (); 
+                    return (ii[ori + w + h*width] - 2*ii[ori + w/2 + h*width]
+                            - 2*ii[ori + w + (h/2)*width]
+                            + 4*ii[ori + w/2 + (h/2)*width]
+                            + ii[ori - 1 + h*width]
+                            - 2*ii[ori - 1 + (h/2)*width]);
                 }
             }
         }
     }
-
-
 
     return 0;
 }

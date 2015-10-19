@@ -53,7 +53,7 @@ void haarFeatures(int ii[], int width, int height)
                                 {
                                     ori = (j + y)*width + i + x;
 
-                                    res = calcul(ii, type, w, h, width, x, y, ori);
+                                    res = calcul(ii, type, w, h, width, i, j, ori);
 
                                     err = fprintf(file, "%d\n", res);
                                     if (err == 0)
