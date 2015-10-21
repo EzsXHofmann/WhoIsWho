@@ -15,7 +15,7 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
             if (x != 0 && y != 0)
             {
                 return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]
-                        + ii[ori + w - width] - 2*[ori + w/2 - width]
+                        + ii[ori + w - width] - 2*ii[ori + w/2 - width]
                         - ii[ori - 1 + h*width] + ii[ori - 1 - width]);
             }
             else
@@ -23,7 +23,7 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
                 if (x == 0)
                 {
                     return (2*ii[ori + w/2 + h*width] - ii[ori + w + h*width]
-                            + ii[ori + w - width] - 2*[ori + w/2 - width]);
+                            + ii[ori + w - width] - 2*ii[ori + w/2 - width]);
                 }
                 else
                 {
@@ -39,7 +39,7 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
         if (x == 0 && y == 0)
         {
             return (ii[ori + w + h*width] - 2*ii[ori + (2*w)/3 + h*width]
-                    + 2*ii[ori + w/3 h*width]);
+                    + 2*ii[ori + w/3 + h*width]);
         }
         else
         {
@@ -106,14 +106,14 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
     {
         if (x == 0 && y == 0)
         {
-            return (ii[ori + w + h*width] - 2*[ori + w + ((2*h)/3)*width]
+            return (ii[ori + w + h*width] - 2*ii[ori + w + ((2*h)/3)*width]
                     + 2*ii[ori + w + (h/3)*width]);
         }
         else
         {
             if (x != 0 && y != 0)
             {
-                return (ii[ori + w + h*width] - 2*[ori + w + ((2*h)/3)*width]
+                return (ii[ori + w + h*width] - 2*ii[ori + w + ((2*h)/3)*width]
                         + 2*ii[ori + w + (h/3)*width] - ii[ori - 1 + h*width]
                         + 2*ii[ori - 1 + ((2*h)/3)*width]
                         - 2*ii[ori - 1 + (h/3)*width]
@@ -124,14 +124,14 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
                 if (x == 0)
                 {
                     return (ii[ori + w + h*width]
-                            - 2*[ori + w + ((2*h)/3)*width]
+                            - 2*ii[ori + w + ((2*h)/3)*width]
                             + 2*ii[ori + w + (h/3)*width] 
                             - ii[ori + w - width]);
                 }
                 else
                 {
                     return (ii[ori + w + h*width]
-                            - 2*[ori + w + ((2*h)/3)*width]
+                            - 2*ii[ori + w + ((2*h)/3)*width]
                             + 2*ii[ori + w] - ii[ori - 1 + h*width]
                             + 2*ii[ori - 1 + ((2*h)/3)*width]
                             - 2*ii[ori - 1 + (h/3)*width]); 
@@ -180,10 +180,5 @@ int calcul(int ii[], int type, int w, int h, int width, int x, int y, int ori)
         }
     }
 
-    return 0;
-}
-
-int main()
-{
     return 0;
 }

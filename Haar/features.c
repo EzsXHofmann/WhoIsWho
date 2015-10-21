@@ -2,62 +2,73 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include "calculs.h"
 
+//DW = fenêtre de détection
+//ii = image intégrale
 
-void haarFeature1(SDL_Surface *detec, int ii[])
-{ 
-    //detec = fenetre de detection
-    //ouvre le fichier mode écriture pointeur à la fin du fichier
-    FILE *file = fopen("HAARCARACS","a");
-    if(file == NULL)
+void changeparameters(int *w, int *h, int *incw, int *inch, int type)
+{
+    if (type == 1)
+        *w = 1, *h = 0, *incw = 2, *inch = 1;
+    if (type == 2)
+        *w = 2, *h = 0, *incw = 3, *inch = 1;
+    if (type == 3)
+        *w = 0, *h = 1, *incw = 1, *inch = 2;
+    if (type == 4)
+        *w = 0, *h = 2, *incw = 1, *inch = 3;
+    if (type == 5)
+        *w = 1, *h = 1, *incw = 2, *inch = 2;
+}
+
+void haarFeatures(int ii[], int width, int height)
+{
+    FILE *file = fopen("HAARCARACS", "a");
+    if (file == NULL)
         printf("ERROR OPENING FILE\n");
-    int i = 0, j = 0;
-    int h = 1, w = 1; //h inutile c'est des carres donc h = w
-    int s1 = 0, s2 = 0;
-    int res = 0;
-    while(i + h < detec->h && j + w < detec->w) //boucle pour scale
+
+    int c = 24, ori, res, err, w2, h2, incw, inch;
+
+    //La taille de la DW doit être <= à la taille de l'ii
+    while (c <= width && c <= height)
     {
-        for(i = 0; i < detec->h && i + h < detec->h; i++)
+        //Toutes les positions possibles de la DW
+        for (int j = 0; j + c < height; j++)
         {
-            int offset = i*detec->w;
-            for(j = 0; j < detec->w && j + w < detec->w;j++)
-            {   
-                //save la position[i,j] au debut du parcours du feature
-                int index = i, index2 = j;
-                //parcours du feature (1 seul carré)
-                for(int k = 0; k < h; k++)   
-                {   
-                    int offset2 = (index+1)*detec->w; //ligne du dessous
-                    for(int l = 0; l < w; l++)
+            for (int i = 0; i + c < width; i++)
+            {
+                for (int type = 1; type < 6; type++)
+                {
+                    changeparameters(&w2, &h2, &incw, &inch, type);
+
+                    fprintf(file, "(%d, %d, %d, %d) :\n", type, i, j, c);
+                    //Différentes tailles du feature
+                    for (int h = h2; h < c; h += inch)
                     {
-                        //on utilise ls positions "virtuelles" [i,j] pour:
-                        //avoir la pos du pixel courant selon i et j qui sont
-                        //les valeurs correspondantes dans la matrix de pixel
-                        //et accéder à l'image intégrale qui correspond à la
-                        //matrice 
-                        s1 += ii[offset + index2] + ii[offset2+index2+1]
-                            - ii[offset+index2+1] - ii[offset2+index2];
+                        for (int w = w2; w < c; w += incw)
+                        {
+                            //Positions du feature
+                            for (int y = 0; y + h <= c; y++)
+                            {
+                                for (int x = 0; x + w <= x; x++)
+                                {
+                                    ori = (j + y)*width + i + x;
 
-                        s2 += ii[offset+index2+w] + ii[offset2+index2+w+1]
-                            - ii[offset+index2+w+1]-ii[offset2+index2+w];
-                        index2++;
+                                    res = calcul(ii, type, w, h, width, i, j, ori);
+
+                                    err = fprintf(file, "%d\n", res);
+                                    if (err == 0)
+                                        printf("Error writing in HAARCARACS");
+                                }
+                            }
+                        }
                     }
-                    
-                    index++;
                 }
-                res = s1 - s2; //différence blanc - noir
-                int x = fprintf(file,"(1,%d,%d,%d,%d) = %d\n",i,j,w,h,res);
-                if(x == 0) //erreur d'ecriture
-                    printf("Error writing in HAARCARACS");
-
             }
         }
-        h *= 5/4; //scale du feature 
-        w *= 5/4;
+
+        c = c*5/4;
     }
-    int  x = fclose(file);
-    if(x != 0)
-        printf("Error closing the file");
 }
 
 int main()
