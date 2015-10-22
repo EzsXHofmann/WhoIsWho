@@ -2,8 +2,8 @@
 # include <stdio.h>
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
-# include "pixel_operations.h"
-# include "basic_fun.h"
+# include "../SDLIMAGE/pixel_operations.h"
+# include "../SDLIMAGE/basic_fun.h"
 
 void img_integrale(SDL_Surface *img,int *sat)
 {
