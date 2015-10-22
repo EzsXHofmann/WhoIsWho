@@ -29,34 +29,40 @@ int adaboost(struct samples[], size_t len, size_t nbIter)
        weights = weights / weightSum;
        /*Fin de la normalisation */
        
-       /*Recuperation des features 
-        * pour le classifieur faible */
-       for(size_t i = 0; i < len; i++)
-       {
-            file = fopen(samples[i].filename,"r");
+            /*Recuperation des features 
+             * pour le classifieur faible */
+       
+            file = fopen(samples[0].filename,"r");
             if(file == NULL)
             {
                 printf("Error opening %s file", samples[i].filename);
                 return -1;
             }
-            /* TODO 
-             * Trouver le threshold (cf .h) qui minimise les erreurs
-             * de classifications en appliquant 
-             * chaque feature a chaque image 
-             * pour trouver le classifieur faible avec
-             * un taux d'erreur minimal (utiliser arg min)
-             */
-            
+            /* Un feature par itération */
+            for(size_t j = 0; j < nbCharacs; j++)
+            {
+                char curFeat[10] = "";
+                curFeat = fgets(curFeat,5,file);
+                int feature = strtoul(curFeat,NULL,10);
 
-       }
+                   
+              
+            }
+                       
 
-
-
-
-
-
-
-
+       
     }
 
 }
+
+
+
+double epsilon(int feat, int treshold, int positive)
+{
+  int eps = 0;
+  if(weakClassifer(feat,threshold) != positive)
+      eps = 1;
+  return (double)epsilon; 
+}
+
+

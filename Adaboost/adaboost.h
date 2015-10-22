@@ -4,15 +4,17 @@
 struct samples
 {
     char *filename; //Haar characs computed for the sample img
-    int positive; // 0 if pos 1 if negative
+    int positive; // -1 is not a face , 1 is a face 
 }
 
 inline
-double weakClassifier(int x, double treshold)
+int weakClassifier(int x, int treshold)
 {
-    return (x < treshold)?0:1; 
+    return (x < treshold)?1:-1; 
 }
-int adaboost(struct samples[],size_t len, int nbIter); 
+int adaboost(struct samples[],size_t len, int nbIter);
+double epsilon(int feat, int threshold, int positive);
+
 
 
 
