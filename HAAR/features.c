@@ -33,14 +33,13 @@ void haarFeatures(int ii[], int width, int height)
     while (c <= width && c <= height)
     {
         //Toutes les positions possibles de la DW
-        for (int j = 0; j + c < height; j++)
+        for (int j = 0; j + c <= height; j++)
         {
-            for (int i = 0; i + c < width; i++)
+            for (int i = 0; i + c <= width; i++)
             {
                 for (int type = 1; type < 6; type++)
                 {
                     changeparameters(&w2, &h2, &incw, &inch, type);
-
                     fprintf(file, "(%d, %d, %d, %d) :\n", type, i, j, c);
                     //Différentes tailles du feature
                     for (int h = h2; h < c; h += inch)
@@ -48,13 +47,12 @@ void haarFeatures(int ii[], int width, int height)
                         for (int w = w2; w < c; w += incw)
                         {
                             //Positions du feature
-                            for (int y = 0; y + h <= c; y++)
+                            for (int y = 0; y + h < c; y++)
                             {
-                                for (int x = 0; x + w <= x; x++)
+                                for (int x = 0; x + w < c; x++)
                                 {
                                     ori = (j + y)*width + i + x;
-
-                                    res = calcul(ii, type, w, h, width, i, j, ori);
+                                    res = calcul(ii, type, w, h, width, ori);
 
                                     err = fprintf(file, "%d\n", res);
                                     if (err == 0)
@@ -69,9 +67,7 @@ void haarFeatures(int ii[], int width, int height)
 
         c = c*5/4;
     }
+    fclose(file);
 }
 
-int main()
-{
-    return 0;
-}
+
