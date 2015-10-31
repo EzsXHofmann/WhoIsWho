@@ -5,13 +5,12 @@
 #include <SDL.h>
 #include <SDL/SDL_image.h>
 
-typedef struct EltDB EltDB;
-struct EltDB
+typedef struct EltDB
 {
     SDL_Surface *img;
     char *name;
     struct EltDB *next;
-};
+} EltDB;
 
 void initializeDB(EltDB *begin);
 
