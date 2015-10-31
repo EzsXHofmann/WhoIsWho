@@ -1,20 +1,30 @@
-# ifndef _ADABOOST_ADABOOST_H
-# define _ADABOOST_ADABOOST_H
+# ifndef _ADABOOST_H_
+# define _ADABOOST_H_
 
-struct samples
+# define T = 20 //nb de classifieurs faibles dans un fort
+# define NbFeatures = 162341
+typedef struct
 {
     char *filename; //Haar characs computed for the sample img
     int positive; // -1 is not a face , 1 is a face 
-}
-
-inline
-int weakClassifier(int x, int treshold)
+} Sample
+typedef struct
 {
-    return (x < treshold)?1:-1; 
-}
-int adaboost(struct samples[],size_t len, int nbIter);
-double epsilon(int feat, int threshold, int positive);
+    double treshold;
+    double alpha;
+    double error;
+    int positive;
+    int *features;
 
+} WeakClassifier
+typedef struct 
+{
+    double error;
+    int acc;
+    WeakClassifier sc[25];
+
+} StrongClassifier
+    
 
 
 
