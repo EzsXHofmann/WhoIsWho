@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <err.h>
 #include "SDLIMAGE/pixel_operations.h"
 #include "SDLIMAGE/basic_fun.h"
 #include "SDLIMAGE/sat.h"
@@ -11,12 +10,22 @@
 int main(int argc, char* argv[])
 {    
     if (argc != 3)
-        errx(2, "Usage:\n%s <path> <mode>\nMode:\n0: Set all the pixels of the image to 1\n1: Do nothing else", argv[0]);
+    {
+        printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
+        printf("\n\t0: Set all the pixels of the image to 1");
+        printf("\n\t1: Do nothing else\n");
+        return 0;
+    }
 
     int n = strtoul(argv[2], NULL, 10);
 
     if (n != 0 && n != 1)
-        errx(2, "Usage:\n%s <path> <mode>\nMode:\n0: Set all the pixels of the image to 1\n1: Do nothing else", argv[0]);
+    {
+        printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
+        printf("\n\t0: Set all the pixels of the image to 1");
+        printf("\n\t1: Do nothing else\n");
+        return 0;
+    }
 
     init_sdl();
     SDL_Surface *img = load_image(argv[1]);
