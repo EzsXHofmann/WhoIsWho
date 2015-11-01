@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     
     printf("--------------------------------------------------------\n");
     
-//    haarFeatures(matrix, img->w, img->h);
+    haarFeatures(matrix, img->w, img->h);
 
     SDL_FreeSurface(img);
     free(matrix);
