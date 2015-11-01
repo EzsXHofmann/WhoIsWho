@@ -7,7 +7,7 @@
 
 void img_integrale(SDL_Surface *img,int *sat)
 {
-    //convert_to_grey(img);
+    convert_to_grey(img);
 
     for(int i = 0; i < img->h; i++)
     {   
