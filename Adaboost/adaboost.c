@@ -187,13 +187,26 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
 
                   
     }
-    
-    //TODO
-    //classifieur final h(x) x = ???
+    double sumAlpha = 0.0; 
+    for(i = 0; i < T; i++)
+        sumAlpha += strong.wc[i].alpha;
+    sumAlpha /= 2.0;
+
+    double sumCls = 0.0;
+    for(i = 0; i < T; i++)
+    {
+        int val = testValue((int)strong.value, strong.wc[i].treshold);
+        sumCls += strong.wc[i].alpha * val;
+
+    }
 
     free(weights);
     free(usedFeature);
-    return 0;
+
+    if(sumCls > sumAlpha)
+        return 1;
+    else
+        return 0;    
 
 }
 

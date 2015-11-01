@@ -16,7 +16,7 @@ typedef struct
 } WeakClassifier;
 typedef struct 
 {
-   // double value;
+    double value;
     int count;
     WeakClassifier wc[25];
 
