@@ -40,7 +40,7 @@ void haarFeatures(int ii[], int width, int height)
                 for (int type = 1; type < 6; type++)
                 {
                     changeparameters(&w2, &h2, &incw, &inch, type);
-                    fprintf(file, "(%d, %d, %d, %d) :\n", type, i, j, c);
+                   // fprintf(file, "(%d, %d, %d, %d) :\n", type, i, j, c);
                     //Différentes tailles du feature
                     for (int h = h2; h < c; h += inch)
                     {
