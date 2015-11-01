@@ -83,7 +83,7 @@ void convert_to_grey(SDL_Surface *img)
         {
 			pixel = getpixel(img, i, j);
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
-			float lum = 0.3*r + 0.59*g + 0.11*b;
+			float lum = (r + g + b)/3;
 			r = (char)lum;		//cast sur 8bits
 			g = (char)lum;
 			b = (char)lum;
