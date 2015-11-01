@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
     {
         for (int j = 0; j < img->h; j++)
             for (int i = 0; i < img->w; i++)
-                putpixel(img, i, j, 1);
+                putpixel(img, i, j, 0x10101);
     }
 
     int *matrix = malloc(img->h*img->w*sizeof(int));
