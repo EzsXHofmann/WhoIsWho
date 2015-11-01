@@ -12,6 +12,7 @@
 void initializeDB(EltDB *begin)
 {
     EltDB *temp = begin;
+    temp->old = NULL;
     char *path = "img/";
     GError **error = malloc(sizeof(GError**));
     GDir* dir = g_dir_open(path, 0, error);
@@ -20,11 +21,11 @@ void initializeDB(EltDB *begin)
     while (file != NULL)
     {
         path = "img/";
-        strcpy(temp->name, file);
-        temp->img = load_image(strcat(path, file));
+        strcpy(temp->name, file); 
         temp->next = malloc(sizeof(EltDB*));
         //temp->cls = recuperation StrongClassifier de l'image
         temp = temp->next;
+        temp->old = temp;
         file = g_dir_read_name(dir);
     }
     
@@ -36,32 +37,64 @@ int ajout_eltDB(EltDB *begin, gchar *name)
 {
     EltDB *temp = begin;
     EltDB *new = malloc(sizeof(EltDB*));
-    while(temp != NULL && *(temp->name) != *name)
+    while(temp->next != NULL && strcmp(temp->name,name)<0)
     {
-        if(*(temp->name) > *name)
-        {
-            strcpy(new->name, name);
-            new->next = temp->next;
-            temp->next = new;
-            return 1;
-        }
-        temp = temp->next;
-        
+        temp = temp->next;  
     }
-    if (temp == NULL)
+    if(strcmp(temp->name,name) != 0)
     {
-        temp = malloc(sizeof(EltDB*));
-        strpy(temp->name, name);
-        temp->next = NULL;
+        strcpy(new->name, name);
+        new->next = temp;
+        temp->old = new;
         return 1;
     }
-    return 0;
+    if(strcmp(temp->next->name,name)!= 0)
+    {
+        strcpy(new->name,name);
+        new->next = temp->next;
+        temp->next->old = new;
+        return 1;
+    }
+    if(strcmp(temp->name,name) == strcmp(temp->next->name,name))
+    {
+        return 0;
+    }
+    strcpy(new->name, name);
+    new->next = NULL;
+    new->old = temp->next;
+    return 1;
+    
+}
+
+int supp_eltDB(EltDB *begin, gchar *name)
+{
+    EltDB *temp = begin;
+    while (temp != NULL && strcmp(temp->name,name)<0)
+    {
+        temp = temp->next;
+    }
+    if (temp == NULL || strcmp(temp->name,name)!=0)
+    {
+        return 0;
+    }
+    temp->old->next = temp->next;
+    free(temp);
+    return 1;  
+}
+
+EltDB* search_EltDB(EltDB *begin, gchar *name)
+{
+    EltDB *temp = begin;
+    while(temp != NULL && strcmp(temp->name,name) < 0)
+    {
+        temp = temp->next;
+    }
+    return temp;
 }
 
 int main()
 {
     init_sdl();
     EltDB *begin = malloc(sizeof(EltDB*));
-    initializeDB(begin);
-    display_image(begin->img);
+    initializeDB(begin);   
 }

@@ -7,11 +7,11 @@
 #include "../Adaboost/adaboost.h"
 
 typedef struct EltDB
-{
-    SDL_Surface *img;
+{ 
     char *name;
     StrongClassifier cls;
     struct EltDB *next;
+    struct EltDB *old;
     
 } EltDB;
 
