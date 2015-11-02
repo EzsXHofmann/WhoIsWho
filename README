@@ -1,5 +1,5 @@
 1/ HOW TO COMPILE THE PROJECT
-To compile the project, you have to use the command "make".
+To compile the project, you have to use the "make" command.
 Just type "make" when you are in the root directory of the project.
 
 2/ HOW TO USE THE PROJECT
@@ -11,5 +11,9 @@ Modes:
     0: Set all the pixels of the image to 1
     1: Do nothing else
 
-After that, you can use the command "make clean" to remove all
-the compiled files project.
+It will display the integral image of the original image and will
+also generate a file where the results of Haar features are
+writen.
+
+After that, you can use the "make clean" command to remove all
+the files resulting of the compilation.
