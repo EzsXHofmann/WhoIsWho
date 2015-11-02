@@ -11,7 +11,7 @@
 int main(int argc, char* argv[])
 {    
     if (argc != 3 || strlen(argv[2]) != 1
-                  || argv[2][0] < 48 || argv[2][0] > 57)
+                  || argv[2][0] < 48 || argv[2][0] > 49)
     {
         printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
         printf("\n\t0: Set all the pixels of the image to 1");
@@ -20,14 +20,6 @@ int main(int argc, char* argv[])
     }
 
     int n = strtoul(argv[2], NULL, 10);
-
-    if (n != 0 && n != 1)
-    {
-        printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
-        printf("\n\t0: Set all the pixels of the image to 1");
-        printf("\n\t1: Do nothing else\n");
-        return 0;
-    }
 
     init_sdl();
     SDL_Surface *img = load_image(argv[1]);
