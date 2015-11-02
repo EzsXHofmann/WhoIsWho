@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include "calculs.h"
+#include "compute.h"
 
 //DW = fenêtre de détection
 //ii = image intégrale
@@ -52,7 +52,7 @@ void haarFeatures(int ii[], int width, int height)
                                 for (int x = 0; x + w < c; x++)
                                 {
                                     ori = (j + y)*width + i + x;
-                                    res = calcul(ii, type, w, h, width, ori);
+                                    res = compute(ii, type, w, h, width, ori);
 
                                     err = fprintf(file, "%d\n", res);
                                     if (err == 0)

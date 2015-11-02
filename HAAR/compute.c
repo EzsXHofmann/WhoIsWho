@@ -1,7 +1,7 @@
+#include "compute.h"
 
 
-
-int calcul(int ii[], int type, int w, int h, int width, int ori)
+int compute(int ii[], int type, int w, int h, int width, int ori)
 {
 
     if (type == 1)
