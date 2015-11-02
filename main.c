@@ -6,10 +6,12 @@
 #include "SDLIMAGE/basic_fun.h"
 #include "SDLIMAGE/sat.h"
 #include "HAAR/features.h"
+#include <string.h>
 
 int main(int argc, char* argv[])
 {    
-    if (argc != 3)
+    if (argc != 3 || strlen(argv[2]) != 1
+                  || argv[2][0] < 48 || argv[2][0] > 57)
     {
         printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
         printf("\n\t0: Set all the pixels of the image to 1");
