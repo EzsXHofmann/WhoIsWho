@@ -7,7 +7,7 @@ CFLAGS= -Wall -Wextra -Werror -std=c99 -pedantic -O3
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image
  
-SRC= SDLIMAGE/pixel_operations.c SDLIMAGE/basic_fun.c SDLIMAGE/sat.c HAAR/calculs.c HAAR/features.c main.c
+SRC= SDLIMAGE/pixel_operations.c SDLIMAGE/basic_fun.c SDLIMAGE/sat.c HAAR/compute.c HAAR/features.c main.c
 OBJ= ${SRC:.c=.o}
  
 all: main
