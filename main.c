@@ -36,11 +36,11 @@ int main(int argc, char* argv[])
 
     printf("\n-------------------- Integral Image --------------------\n");
 
-    for(int i = 0; i < 24; i++)
+    for(int i = 0; i < img->h; i++)
     {  
         int offset = i * img->w;
         
-        for(int j = 0; j < 24; j++)
+        for(int j = 0; j < img->w; j++)
             printf("%5d ", matrix[offset + j]);
 
         printf("\n");
