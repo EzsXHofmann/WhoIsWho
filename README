@@ -11,9 +11,9 @@ Modes:
     0: Set all the pixels of the image to 1
     1: Do nothing else
 
-It will display the integral image of the original image and will
-also generate a file where the results of Haar features are
-writen.
+It will display the integral image matrix of the original image
+and will also generate a file where the results of the Haar
+features are written.
 
 After that, you can use the "make clean" command to remove all
-the files resulting of the compilation.
+the files resulting from the compilation.
