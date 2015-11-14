@@ -3,8 +3,8 @@
 # include <math.h>
 # include "adaboost.h"
 
-# define T 20 //nb de classifieurs faibles dans un fort
-# define NbFeatures 162336
+//# define T 20 //nb de classifieurs faibles dans un fort
+//# define NbFeatures 162336
 # define MAXFEATVAL 1000000
 
 double tabSum(double *tab, int len)
@@ -84,8 +84,13 @@ void AddClassifier(StrongClassifier sc, WeakClassifier wc)
 }
 
 int adaBoost(Sample samples[], int nbPos, int nbNeg
-            , StrongClassifier strong)
+            , StrongClassifier strong, int T, 
+            int NbFeatures)
 {
+    /* Le nombre de classifieurs faibles dans un fort correspond
+     * à T. NbFeatures est le nombre de haar-features calculées
+     * pour une fenêtre de détection x*x
+     */
     int nbSamples = nbPos + nbNeg;
     double *weights = malloc(nbSamples * sizeof(double));
     int *usedFeature = malloc(nbSamples * sizeof(int));
@@ -139,7 +144,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         //d'erreur minimal
         double minError = classifiers[0].error;
         int minIndex = 0;
-        int treshold = 0;
+        int treshold = classifiers[0].treshold;
 
         for(j = 1; j < NbFeatures; j++)
         {
@@ -159,13 +164,14 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         }
 
         //Coefficients ...
-        double beta = (1 - minError)/minError;
-        double alpha = log(beta);
+        double beta = minError/(1 - minError);
+        double alpha = log(1/beta);
 
         WeakClassifier cls;
         cls.treshold = treshold;
         cls.error = minError;   
         cls.alpha = alpha;
+        cls.index = minIndex;
         AddClassifier(strong,cls);
         usedFeature[minIndex] = 1;
 
@@ -192,21 +198,36 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         sumAlpha += strong.wc[i].alpha;
     sumAlpha /= 2.0;
 
-    double sumCls = 0.0;
+   /* double sumCls = 0.0;
     for(i = 0; i < T; i++)
     {
         int val = testValue((int)strong.value, strong.wc[i].treshold);
         sumCls += strong.wc[i].alpha * val;
 
+    } */
+
+    double sumCls = 0.0;
+    for(j = 0; j < nbSamples; j++)
+    {
+        sumCls = 0.0;
+        for(i = 0; i < T; i++)
+        {
+        
+          int val = getFeature(samples[j].filename,strong.wc[i].index);
+          int clsValue = testValue(val,strong.wc[i].treshold);
+          sumCls += strong.wc[i].alpha * clsValue;
+        }
+
+        if(sumCls >= sumAlpha)
+            printf("StrongClassifer applied to sample (%d) : 1\n",j);
+        else
+            printf("StrongClassifer applied to sample (%d) : 0\n",j);
     }
 
     free(weights);
     free(usedFeature);
 
-    if(sumCls > sumAlpha)
-        return 1;
-    else
-        return 0;    
+    return (sumCls >= sumAlpha);
 
 }
 

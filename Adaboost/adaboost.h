@@ -12,11 +12,12 @@ typedef struct
     int treshold;
     double alpha;
     double error;
+    int index; //which feature is selected 
 
 } WeakClassifier;
 typedef struct 
 {
-    double value;
+  
     int count;
     WeakClassifier wc[25];
 
@@ -31,7 +32,7 @@ int findTreshold(int *values, double *weights, Sample samples[],
                  int N);
 void AddClassifier(StrongClassifier sc, WeakClassifier wc);
 int adaBoost(Sample samples[], int nbPos, int nbNeg
-            , StrongClassifier strong);
+            , StrongClassifier strong, int T, int NbFeatures);
 
 
 
