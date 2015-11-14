@@ -207,6 +207,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
     } */
 
     double sumCls = 0.0;
+    double firstSumCls = 0.0;
     for(j = 0; j < nbSamples; j++)
     {
         sumCls = 0.0;
@@ -217,7 +218,9 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
           int clsValue = testValue(val,strong.wc[i].treshold);
           sumCls += strong.wc[i].alpha * clsValue;
         }
-
+        
+        if(j == 0)
+            firstSumCls = sumCls;
         if(sumCls >= sumAlpha)
             printf("StrongClassifer applied to sample (%d) : 1\n",j);
         else
@@ -227,7 +230,30 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
     free(weights);
     free(usedFeature);
 
-    return (sumCls >= sumAlpha);
+    return (firstSumCls >= sumAlpha);
+
+}
+
+int applyStrongClassifer(StrongClassifier strong, Sample sample)
+{
+    int i;
+    double sumAlpha = 0.0; 
+    for(i = 0; i < strong.count; i++)
+        sumAlpha += strong.wc[i].alpha;
+    sumAlpha /= 2.0;
+
+        double sumCls = 0.0;
+    
+        for(i = 0; i < strong.count; i++)
+        {
+        
+          int val = getFeature(sample.filename,strong.wc[i].index);
+          int clsValue = testValue(val,strong.wc[i].treshold);
+          sumCls += strong.wc[i].alpha * clsValue;
+        }
+        
+        return (sumCls >= sumAlpha);
+    
 
 }
 

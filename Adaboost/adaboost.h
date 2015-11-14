@@ -34,6 +34,7 @@ void AddClassifier(StrongClassifier sc, WeakClassifier wc);
 int adaBoost(Sample samples[], int nbPos, int nbNeg
             , StrongClassifier strong, int T, int NbFeatures);
 
+int applyStrongClassifer(StrongClassifier strong, Sample sample);
 
 
 
