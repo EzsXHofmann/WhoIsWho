@@ -5,7 +5,7 @@
 
 //# define T 20 //nb de classifieurs faibles dans un fort
 //# define NbFeatures 162336
-# define MAXFEATVAL 1000000
+# define MAXFEATVAL 10000 
 
 double tabSum(double *tab, int len)
 {
@@ -31,6 +31,8 @@ int getFeature(char *featFilePath, int featNumber)
     free(s);
     s = NULL;
     return res;
+
+    fclose(file);
 
 }
 
@@ -83,8 +85,8 @@ void AddClassifier(StrongClassifier sc, WeakClassifier wc)
     sc.count++;
 }
 
-int adaBoost(Sample samples[], int nbPos, int nbNeg
-            , StrongClassifier strong, int T, 
+StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
+            ,  int T, 
             int NbFeatures)
 {
     /* Le nombre de classifieurs faibles dans un fort correspond
@@ -95,15 +97,20 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
     double *weights = malloc(nbSamples * sizeof(double));
     int *usedFeature = malloc(nbSamples * sizeof(int));
     
+    StrongClassifier strong;
+    FILE *test = fopen("TEST","a");
 
     int i,j;
 
     //initialisation des poids
     for(i = 0; i < nbSamples; i++)
-        if(samples[i].positive == 1)
+        if(samples[i].positive == 1 && nbPos)
             weights[i] = 1/nbPos;
         else
-            weights[i] = 1/nbNeg;
+        {  
+            if(nbNeg)
+                weights[i] = 1/nbNeg;
+        }
 
     //Boucle principale (boosting)
     for(int t = 0; t < T; t++)
@@ -119,7 +126,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         //un classifieur faible hj
         //On trouve ensuite le classifieur
         //Avec le taux d'erreur minimal
-        WeakClassifier classifiers[NbFeatures];
+        WeakClassifier *classifiers = malloc(sizeof(WeakClassifier) * NbFeatures);
 
         for(j = 0; j < NbFeatures; j++)
         {
@@ -128,7 +135,12 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
             
             int featValues[nbSamples];
             for(i = 0; i < nbSamples; i++)
+            {
                 featValues[i] = getFeature(samples[i].filename, j);
+                int x = featValues[i];
+                fprintf(test,"%d\n",x);
+
+            }
 
             int treshold = findTreshold(featValues, weights, samples,
                                         nbSamples);
@@ -137,6 +149,8 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
 
             classifiers[j].treshold = treshold;
             classifiers[j].error = error;
+
+                        
                   
         }
 
@@ -146,7 +160,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         int minIndex = 0;
         int treshold = classifiers[0].treshold;
 
-        for(j = 1; j < NbFeatures; j++)
+        for(j = 0; j < NbFeatures; j++)
         {
             if(classifiers[j].error < minError)
             {
@@ -160,7 +174,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         if(minError >= 1)
         {
             printf("minError >= 1 cant do log\n");
-            return -1;
+            
         }
 
         //Coefficients ...
@@ -172,7 +186,9 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
         cls.error = minError;   
         cls.alpha = alpha;
         cls.index = minIndex;
-        AddClassifier(strong,cls);
+       // AddClassifier(strong,cls);
+        strong.wc[strong.count] = cls;
+        strong.count++;
         usedFeature[minIndex] = 1;
 
         //Pondération des poids 
@@ -191,14 +207,16 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
 
         }
 
+
+        free(classifiers);
                   
     }
-    double sumAlpha = 0.0; 
+  /*  double sumAlpha = 0.0; 
     for(i = 0; i < T; i++)
         sumAlpha += strong.wc[i].alpha;
     sumAlpha /= 2.0;
 
-   /* double sumCls = 0.0;
+    double sumCls = 0.0;
     for(i = 0; i < T; i++)
     {
         int val = testValue((int)strong.value, strong.wc[i].treshold);
@@ -206,7 +224,7 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
 
     } */
 
-    double sumCls = 0.0;
+ /*   double sumCls = 0.0;
     double firstSumCls = 0.0;
     for(j = 0; j < nbSamples; j++)
     {
@@ -225,16 +243,17 @@ int adaBoost(Sample samples[], int nbPos, int nbNeg
             printf("StrongClassifer applied to sample (%d) : 1\n",j);
         else
             printf("StrongClassifer applied to sample (%d) : 0\n",j);
-    }
+    }   */
 
     free(weights);
     free(usedFeature);
+    fclose(test);
 
-    return (firstSumCls >= sumAlpha);
+    return strong;
 
 }
 
-int applyStrongClassifer(StrongClassifier strong, Sample sample)
+int applyStrongClassifier(StrongClassifier strong, Sample sample)
 {
     int i;
     double sumAlpha = 0.0; 
@@ -257,7 +276,4 @@ int applyStrongClassifer(StrongClassifier strong, Sample sample)
 
 }
 
-int main()
-{
-    return 0;
-}
+

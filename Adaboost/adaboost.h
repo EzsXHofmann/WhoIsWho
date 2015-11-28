@@ -31,10 +31,10 @@ double computeSum(int *values, double *weights, Sample samples[],
 int findTreshold(int *values, double *weights, Sample samples[],
                  int N);
 void AddClassifier(StrongClassifier sc, WeakClassifier wc);
-int adaBoost(Sample samples[], int nbPos, int nbNeg
-            , StrongClassifier strong, int T, int NbFeatures);
+StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
+            , int T, int NbFeatures);
 
-int applyStrongClassifer(StrongClassifier strong, Sample sample);
+int applyStrongClassifier(StrongClassifier strong, Sample sample);
 
 
 

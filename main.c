@@ -6,51 +6,40 @@
 #include "SDLIMAGE/basic_fun.h"
 #include "SDLIMAGE/sat.h"
 #include "HAAR/features.h"
+#include "Adaboost/adaboost.h"
 #include <string.h>
 
-int main(int argc, char* argv[])
-{    
-    if (argc != 3 || strlen(argv[2]) != 1
-                  || argv[2][0] < 48 || argv[2][0] > 49)
-    {
-        printf("Usage:\n%s <path> <mode>\nMode:", argv[0]);
-        printf("\n\t0: Set all the pixels of the image to 1");
-        printf("\n\t1: Do nothing else\n");
-        return 0;
-    }
-
-    int n = strtoul(argv[2], NULL, 10);
-
+int main()
+{
     init_sdl();
-    SDL_Surface *img = load_image(argv[1]);
-    
-    if (n == 0)
-    {
-        for (int j = 0; j < img->h; j++)
-            for (int i = 0; i < img->w; i++)
-                putpixel(img, i, j, 0x10101);
-    }
-
+    SDL_Surface *img = load_image("img/McCord2.jpg");
+    convert_to_grey(img);
     int *matrix = malloc(img->h*img->w*sizeof(int));
     img_integrale(img, matrix);
-
-    printf("\n-------------------- Integral Image --------------------\n");
-
-    for(int i = 0; i < img->h; i++)
-    {  
-        int offset = i * img->w;
-        
-        for(int j = 0; j < img->w; j++)
-            printf("%5d ", matrix[offset + j]);
-
-        printf("\n");
-    }
-    
-    printf("--------------------------------------------------------\n");
-    
     haarFeatures(matrix, img->w, img->h);
+    FILE *f = fopen("ADATEST", "a");
 
-    SDL_FreeSurface(img);
-    free(matrix);
+    Sample  sample[1];
+    char file[] = "/home/zionlion/project/WhoIsWho/HAARCARACS";
+    sample[0].filename = file;
+    sample[0].positive = 1;
+
+    StrongClassifier strong = adaBoost(sample,1,0,1,162336);
+    for(int i = 0; i < strong.count; i++)
+    {
+        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n\n ",i,
+                strong.wc[i].index,strong.wc[i].error,
+                strong.wc[i].treshold,
+                strong.wc[i].alpha);
+    }
+
+    int boole = applyStrongClassifier(strong,sample[0]);
+    printf("%d\n",boole);
+
+    fclose(f);
+
     return 0;
+    
+    
 }
+
