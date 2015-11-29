@@ -23,7 +23,7 @@ int getFeature(char *featFilePath, int featNumber)
         return -1;
     char *s = malloc(10*sizeof(char));
     s = fgets(s,10,file);
-    for(int i = 1; i < featNumber; i++)
+    for(int i = 0; i < featNumber; i++)
     {
         s = fgets(s,10,file);
     }
@@ -38,7 +38,7 @@ int getFeature(char *featFilePath, int featNumber)
 
 int testValue(int value, int threshold)
 {
-    if(value < threshold)
+    if(value > threshold)
         return 0;
     else
         return 1; 
@@ -67,15 +67,19 @@ int findTreshold(int *values, double *weights, Sample samples[],
 {
     
     int min = 2000000;
+    int min1= 0;
     //MAX* = valeur max possible du seuil
-    for(int i = 0; i < MAXFEATVAL; i++)
+    for(int i = 1; i < MAXFEATVAL; i++)
     {
         double res = computeSum(values,weights,samples,i,N);
         if(res < min)
-            min = i;
+        {
+            min = res;
+            min1 = i;
+        }
     }
 
-    return min;
+    return min1;
 
 }
 
@@ -95,12 +99,15 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
      */
     int nbSamples = nbPos + nbNeg;
     double *weights = malloc(nbSamples * sizeof(double));
-    int *usedFeature = malloc(nbSamples * sizeof(int));
-    
-    StrongClassifier strong;
-    FILE *test = fopen("TEST","a");
+    int *usedFeature = malloc(NbFeatures * sizeof(int));
 
+        
+    StrongClassifier strong;
+   
     int i,j;
+
+    for(i = 0; i < NbFeatures; i++)
+        usedFeature[i] = 0;
 
     //initialisation des poids
     for(i = 0; i < nbSamples; i++)
@@ -132,16 +139,22 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         {
             if(usedFeature[j])
                 continue;
+             
             
             int featValues[nbSamples];
             for(i = 0; i < nbSamples; i++)
             {
+                 
+
                 featValues[i] = getFeature(samples[i].filename, j);
-                int x = featValues[i];
-                fprintf(test,"%d\n",x);
+                if(featValues[i] < 0)
+                    featValues[i] = 0;
+                            
+                
 
             }
-
+          
+            
             int treshold = findTreshold(featValues, weights, samples,
                                         nbSamples);
             double error = computeSum(featValues, weights, samples,
@@ -247,7 +260,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
 
     free(weights);
     free(usedFeature);
-    fclose(test);
+    //fclose(test);
 
     return strong;
 

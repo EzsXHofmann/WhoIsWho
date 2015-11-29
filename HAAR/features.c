@@ -21,9 +21,9 @@ void changeparameters(int *w, int *h, int *incw, int *inch, int type)
         *w = 1, *h = 1, *incw = 2, *inch = 2;
 }
 
-void haarFeatures(int ii[], int width, int height)
+void haarFeatures(int ii[], int width, int height, char *filename)
 {
-    FILE *file = fopen("HAARCARACS", "w");
+    FILE *file = fopen(filename, "w");
     if (file == NULL)
         printf("ERROR OPENING FILE\n");
 
