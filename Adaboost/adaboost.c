@@ -5,7 +5,7 @@
 
 //# define T 20 //nb de classifieurs faibles dans un fort
 //# define NbFeatures 162336
-# define MAXFEATVAL 10000 
+//# define MAXFEATVAL 10000 
 
 double tabSum(double *tab, int len)
 {
@@ -14,6 +14,58 @@ double tabSum(double *tab, int len)
         acc += tab[i];
     return acc;
         
+}
+
+double min(double a, double b)
+{
+    return a <= b ? a : b;
+}
+
+double max(double a, double b)
+{
+    return a >= b? a : b;
+}
+
+
+void swap(int *a, int *b)
+{
+    int c = *a;
+    *a = *b;
+    *b = c;
+} 
+
+int* choose_pivot(int *begin, int *end)
+{
+    int *p = (begin + (end-begin)/2);
+    return p;
+}
+
+int* partition(int *begin, int *end, int *pivot)
+{
+    int pval = *pivot;
+    swap(pivot, end - 1);
+    pivot = begin;
+    for(int *i = begin; i < end - 1; i++)
+    {
+        if(*i < pval)
+        {
+            swap(pivot,i);
+            pivot++;
+        }
+    }
+    swap(pivot, end - 1);
+    return pivot;
+} 
+
+void quick_sort(int *begin, int *end)
+{
+    if(end - begin > 1)
+    {
+        int *pivot = choose_pivot(begin, end);
+        pivot = partition(begin, end, pivot);
+        quick_sort(begin, pivot);
+        quick_sort(pivot + 1, end);
+    }
 }
 
 int getFeature(char *featFilePath, int featNumber)
@@ -36,50 +88,50 @@ int getFeature(char *featFilePath, int featNumber)
 
 }
 
-int testValue(int value, int threshold)
+int testValue(int value, int threshold,int p)
 {
-    if(value > threshold)
-        return 0;
+    if(p*value < p* threshold)
+        return 1;
     else
-        return 1; 
+        return 0; 
 }
 
 //somme de 1 à N
 double computeSum(int *values, double *weights, Sample samples[],
-                  int threshold,int N)
+                  int threshold,int N,int p)
 {
     double acc = 0.0;
     for(int i = 0; i < N; i++)
     {
-        int tested = testValue(values[i],threshold);
-        if(tested == samples[i].positive)
-            tested = 0;
-        else
-            tested = 1;
-        acc += weights[i]*(double)tested;
+        int tested = testValue(values[i],threshold,p);
+        acc += weights[i]*fabs((double)tested - samples[i].positive);
     }
     return acc;
 }
 
 // Trouve le seuil qui minimise l'erreur de classification
 int findTreshold(int *values, double *weights, Sample samples[],
-                 int N)
+                 int N, double range)
 {
     
-    int min = 2000000;
-    int min1= 0;
-    //MAX* = valeur max possible du seuil
-    for(int i = 1; i < MAXFEATVAL; i++)
+    int min1 = 2000000;
+    int min2= 0;
+   
+    int first = (int)range - 100;
+    int last  = (int)range + 100;
+    for(int i = first; i < last ; i++)
     {
-        double res = computeSum(values,weights,samples,i,N);
-        if(res < min)
+        double resPos = computeSum(values,weights,samples,i,N,1);
+        double resNeg = computeSum(values,weights,samples,i,N,-1);
+        double res = min(resPos, resNeg);
+        if(res < min1)
         {
-            min = res;
-            min1 = i;
+            min1 = res;
+            min2 = i;
         }
     }
 
-    return min1;
+    return min2;
 
 }
 
@@ -112,20 +164,26 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
     //initialisation des poids
     for(i = 0; i < nbSamples; i++)
         if(samples[i].positive == 1 && nbPos)
-            weights[i] = 1/nbPos;
+            weights[i] = 1.0/nbPos;
         else
         {  
             if(nbNeg)
-                weights[i] = 1/nbNeg;
+                weights[i] = 1.0/nbNeg;
         }
 
     //Boucle principale (boosting)
     for(int t = 0; t < T; t++)
     {
         //Normalisation des poids
-        int summedWeights = tabSum(weights, nbSamples);
+        double summedWeightsPos = tabSum(weights, nbPos);
+        double summedWeightsNeg = tabSum(weights + nbPos, nbSamples);
         for(i = 0; i < nbSamples; i++)
-            weights[i] /= summedWeights;
+        {
+            if(samples[i].positive)
+                weights[i] /= summedWeightsPos;
+            else
+                weights[i] /= summedWeightsNeg;
+        }
         
         //Fin de la normalisation des poids
 
@@ -141,29 +199,64 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
                 continue;
              
             
-            int featValues[nbSamples];
+            int *featValues = malloc(sizeof(int) * nbSamples);
             for(i = 0; i < nbSamples; i++)
             {
                  
 
                 featValues[i] = getFeature(samples[i].filename, j);
-                if(featValues[i] < 0)
-                    featValues[i] = 0;
-                            
+                                         
                 
-
             }
-          
+
+            quick_sort(featValues, featValues + nbSamples);
+
+            /*Do not try to understand this */
+
+            double Tpos = 0.0;
+            double Tneg = 0.0;
+            double Spos = 0.0;
+            double Sneg = 0.0;
+            for(i = 0; i < nbPos; i++)
+            {
+                Tpos += weights[i];
+                if(weights[i] < featValues[i])
+                    Spos += weights[i];
+            }
+            for(; i < nbSamples; i++)
+            {
+                Tneg += weights[i];
+                if(weights[i] < featValues[i])
+                    Sneg += weights[i];
+            }
+
+            double range = min(Spos + (Tneg - Sneg), Sneg + (Tpos - Spos));                     
             
             int treshold = findTreshold(featValues, weights, samples,
-                                        nbSamples);
-            double error = computeSum(featValues, weights, samples,
-                                      treshold, nbSamples);
+                                        nbSamples,range);
+            double errorPos = computeSum(featValues, weights, samples,
+                                      treshold, nbSamples, 1);
+            double errorNeg =  computeSum(featValues, weights, samples,
+                                      treshold, nbSamples, -1);
+            int polarity;
+            double error;
+            if(errorPos < errorNeg)
+            {
+                polarity = 1;
+                error = errorPos;
+            }
+            else
+            {
+                polarity = -1;
+                error = errorNeg;
+            }
+
 
             classifiers[j].treshold = treshold;
             classifiers[j].error = error;
+            classifiers[j].polarity = polarity;
 
-                        
+            free(featValues);    
                   
         }
 
@@ -172,6 +265,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         double minError = classifiers[0].error;
         int minIndex = 0;
         int treshold = classifiers[0].treshold;
+        int polarity;
 
         for(j = 0; j < NbFeatures; j++)
         {
@@ -180,6 +274,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
                 treshold = classifiers[j].treshold;
                 minError = classifiers[j].error;
                 minIndex = j;
+                polarity = classifiers[j].polarity;
             }
         }
 
@@ -199,6 +294,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         cls.error = minError;   
         cls.alpha = alpha;
         cls.index = minIndex;
+        cls.polarity = polarity;
        // AddClassifier(strong,cls);
         strong.wc[strong.count] = cls;
         strong.count++;
@@ -210,12 +306,8 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         for(i = 0; i < nbSamples; i++)
         {
             int val = getFeature(samples[i].filename, minIndex);
-            int e = testValue(val, treshold);
+            int e = testValue(val, treshold,polarity);
 
-            if(e == samples[i].positive)
-                e = 0;
-            else
-                e = 1;
             weights[i] *= pow(beta, (double)(1-e));          
 
         }
@@ -280,7 +372,8 @@ int applyStrongClassifier(StrongClassifier strong, Sample sample)
         {
         
           int val = getFeature(sample.filename,strong.wc[i].index);
-          int clsValue = testValue(val,strong.wc[i].treshold);
+          int clsValue = testValue(val,strong.wc[i].treshold,
+                         strong.wc[i].polarity);
           sumCls += strong.wc[i].alpha * clsValue;
         }
         

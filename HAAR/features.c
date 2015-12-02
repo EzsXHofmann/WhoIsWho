@@ -23,7 +23,7 @@ void changeparameters(int *w, int *h, int *incw, int *inch, int type)
 
 void haarFeatures(int ii[], int width, int height, char *filename)
 {
-    FILE *file = fopen(filename, "w");
+    FILE *file = fopen(filename, "w+");
     if (file == NULL)
         printf("ERROR OPENING FILE\n");
 

@@ -13,7 +13,7 @@ typedef struct
     double alpha;
     double error;
     int index; //which feature is selected 
-
+    int polarity; 
 } WeakClassifier;
 typedef struct 
 {
@@ -25,11 +25,11 @@ typedef struct
     
 double tabSum(double *tab, int len);
 int getFeature(char *featFilePath, int featNumber);
-int testValue(int value, int threshold);
+int testValue(int value, int threshold, int p);
 double computeSum(int *values, double *weights, Sample samples[],
-                  int threshold,int N);
+                  int threshold,int N,int p);
 int findTreshold(int *values, double *weights, Sample samples[],
-                 int N);
+                 int N, double range);
 void AddClassifier(StrongClassifier sc, WeakClassifier wc);
 StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             , int T, int NbFeatures);
