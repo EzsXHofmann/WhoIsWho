@@ -24,7 +24,7 @@ typedef struct
 } StrongClassifier;
     
 double tabSum(double *tab, int len);
-int getFeature(char *featFilePath, int featNumber);
+int getFeature(Sample *samples,int *values, int featNumber, int nbSamples);
 int testValue(int value, int threshold, int p);
 double computeSum(int *values, double *weights, Sample samples[],
                   int threshold,int N,int p);

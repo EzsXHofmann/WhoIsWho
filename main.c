@@ -43,8 +43,8 @@ int main()
     char file[] = "/home/zionlion/project/WhoIsWho/test1";
     char file2[]= "/home/zionlion/project/WhoIsWho/test2";
     char file3[]= "/home/zionlion/project/WhoIsWho/test3";
-    char file4[]= "/home/zionlion/project/whoiswho/test4";
-    char file5[]= "/home/zionlion/project/whoiswho/test5";
+    char file4[]= "/home/zionlion/project/WhoIsWho/test4";
+    char file5[]= "/home/zionlion/project/WhoIsWho/test5";
     sample[0].filename = file;
     sample[0].positive = 1;
     sample[1].filename = file2;
@@ -56,7 +56,7 @@ int main()
     sample[4].filename = file5;
     sample[4].positive = 0;
 
-    StrongClassifier strong = adaBoost(sample,3,2,5,162336);
+    StrongClassifier strong = adaBoost(sample,3,2,2,162336);
     for(int i = 0; i < strong.count; i++)
     {
         fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n\n ",i,

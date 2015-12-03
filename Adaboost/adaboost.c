@@ -1,6 +1,8 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <math.h>
+# include <string.h>
+# include <errno.h>
 # include "adaboost.h"
 
 //# define T 20 //nb de classifieurs faibles dans un fort
@@ -68,11 +70,17 @@ void quick_sort(int *begin, int *end)
     }
 }
 
-int getFeature(char *featFilePath, int featNumber)
+int getFeature(Sample *samples, int *values, int featNumber, int nbSamples)
 {
-    FILE *file = fopen(featFilePath, "r");
+    for(int i = 0; i < nbSamples; i++)
+    {
+       FILE *file = fopen(samples[i].filename, "r"); 
     if(file == NULL)
+    {   
+       // printf("Error opening : %s\n",featFilePath);
+        printf("%s\n",strerror(errno));
         return -1;
+    }
     char *s = malloc(10*sizeof(char));
     s = fgets(s,10,file);
     for(int i = 0; i < featNumber; i++)
@@ -82,9 +90,13 @@ int getFeature(char *featFilePath, int featNumber)
     int res = atoi(s);
     free(s);
     s = NULL;
-    return res;
-
+    values[i] = res;
     fclose(file);
+    
+    }
+    return 0;
+
+    
 
 }
 
@@ -122,7 +134,9 @@ int findTreshold(int *values, double *weights, Sample samples[],
     for(int i = first; i < last ; i++)
     {
         double resPos = computeSum(values,weights,samples,i,N,1);
-        double resNeg = computeSum(values,weights,samples,i,N,-1);
+        double resNeg = 3;
+        if(resPos > 0.5)
+            resNeg = computeSum(values, weights, samples,i,N,-1);
         double res = min(resPos, resNeg);
         if(res < min1)
         {
@@ -155,6 +169,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
 
         
     StrongClassifier strong;
+    strong.count = 0;
    
     int i,j;
 
@@ -196,20 +211,27 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         for(j = 0; j < NbFeatures; j++)
         {
             if(usedFeature[j])
+            {
+                classifiers[j].error = 42;
                 continue;
+            }
+               
              
             
             int *featValues = malloc(sizeof(int) * nbSamples);
             for(i = 0; i < nbSamples; i++)
-            {
+                featValues[i] = 0;
+            
                  
 
-                featValues[i] = getFeature(samples[i].filename, j);
+            getFeature(samples,featValues, j, nbSamples);
                                          
-                
-            }
-
-            quick_sort(featValues, featValues + nbSamples);
+            printf("%d\n",j); 
+            
+            int sortedValues[nbSamples];
+            int *sort = memcpy(sortedValues, featValues,
+                                  nbSamples*sizeof(int));
+            quick_sort(sort, sort + nbSamples);
 
             /*Do not try to understand this */
 
@@ -220,13 +242,13 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             for(i = 0; i < nbPos; i++)
             {
                 Tpos += weights[i];
-                if(weights[i] < featValues[i])
+                if(weights[i] < sortedValues[i])
                     Spos += weights[i];
             }
             for(; i < nbSamples; i++)
             {
                 Tneg += weights[i];
-                if(weights[i] < featValues[i])
+                if(weights[i] < sortedValues[i])
                     Sneg += weights[i];
             }
 
@@ -234,9 +256,12 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             
             int treshold = findTreshold(featValues, weights, samples,
                                         nbSamples,range);
+            
             double errorPos = computeSum(featValues, weights, samples,
                                       treshold, nbSamples, 1);
-            double errorNeg =  computeSum(featValues, weights, samples,
+            double errorNeg = 3;
+            if(errorPos > 0.5)
+                errorNeg = computeSum(featValues, weights, samples,
                                       treshold, nbSamples, -1);
             int polarity;
             double error;
@@ -250,14 +275,15 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
                 polarity = -1;
                 error = errorNeg;
             }
-
+                
 
             classifiers[j].treshold = treshold;
             classifiers[j].error = error;
             classifiers[j].polarity = polarity;
 
             free(featValues);    
-                  
+            
+
         }
 
         //On cherche le classifieur avec le taux
@@ -265,23 +291,24 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         double minError = classifiers[0].error;
         int minIndex = 0;
         int treshold = classifiers[0].treshold;
-        int polarity;
+        int polarity = 1;
 
         for(j = 0; j < NbFeatures; j++)
         {
-            if(classifiers[j].error < minError)
+            if(classifiers[j].error < minError && classifiers[j].error != 0)
             {
                 treshold = classifiers[j].treshold;
                 minError = classifiers[j].error;
                 minIndex = j;
                 polarity = classifiers[j].polarity;
+                
             }
         }
 
        
-        if(minError >= 1)
+        if(minError == 0)
         {
-            printf("minError >= 1 cant do log\n");
+            printf("minError = 0\n");
             
         }
 
@@ -289,6 +316,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         double beta = minError/(1 - minError);
         double alpha = log(1/beta);
 
+        usedFeature[minIndex] = 1;
         WeakClassifier cls;
         cls.treshold = treshold;
         cls.error = minError;   
@@ -298,23 +326,24 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
        // AddClassifier(strong,cls);
         strong.wc[strong.count] = cls;
         strong.count++;
-        usedFeature[minIndex] = 1;
+        
 
         //Pondération des poids 
         //des exemples d'apprentissage            
+            int values[nbSamples];
+            getFeature(samples,values, minIndex,nbSamples);
+            for(i = 0; i < nbSamples; i++)
+            {
+                int e = testValue(values[i], treshold,polarity);
+
+                weights[i] *= pow(beta, (double)(1-e));
+            }
+
         
-        for(i = 0; i < nbSamples; i++)
-        {
-            int val = getFeature(samples[i].filename, minIndex);
-            int e = testValue(val, treshold,polarity);
 
-            weights[i] *= pow(beta, (double)(1-e));          
-
-        }
-
-
+         printf("stage : %d j : %d\n",t,j);
         free(classifiers);
-                  
+                          
     }
   /*  double sumAlpha = 0.0; 
     for(i = 0; i < T; i++)
@@ -370,8 +399,8 @@ int applyStrongClassifier(StrongClassifier strong, Sample sample)
     
         for(i = 0; i < strong.count; i++)
         {
-        
-          int val = getFeature(sample.filename,strong.wc[i].index);
+           int val = 0; 
+           getFeature(&sample,&val,strong.wc[i].index,1);
           int clsValue = testValue(val,strong.wc[i].treshold,
                          strong.wc[i].polarity);
           sumCls += strong.wc[i].alpha * clsValue;
