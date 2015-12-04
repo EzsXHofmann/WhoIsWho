@@ -140,8 +140,8 @@ int findTreshold(int *values, double *weights, Sample samples[],
     int min1 = 2000000;
     int min2= 0;
    
-    int first = -500;
-    int last  =  500;
+    int first = -8000;
+    int last  =  1000;
     for(int i = first; i < last ; i++)
     {
         double resPos = computeSum(values,weights,samples,i,N,1);

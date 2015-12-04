@@ -59,10 +59,11 @@ int main()
     StrongClassifier strong = adaBoost(sample,3,2,5,162336);
     for(int i = 0; i < strong.count; i++)
     {
-        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n\n ",i,
+        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n POLARITY:%d\n\n ",i,
                 strong.wc[i].index,strong.wc[i].error,
                 strong.wc[i].treshold,
-                strong.wc[i].alpha);
+                strong.wc[i].alpha,
+                strong.wc[i].polarity);
     }
 
     int boole = applyStrongClassifier(strong,sample[0]);
