@@ -56,7 +56,7 @@ int main()
     sample[4].filename = file5;
     sample[4].positive = 0;
 
-    StrongClassifier strong = adaBoost(sample,3,2,2,162336);
+    StrongClassifier strong = adaBoost(sample,3,2,5,162336);
     for(int i = 0; i < strong.count; i++)
     {
         fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n\n ",i,
