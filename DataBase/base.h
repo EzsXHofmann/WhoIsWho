@@ -1,20 +1,17 @@
 #ifndef BASE_H_
 #define BASE_H_
 
-#include <stdlib.h>
-#include <SDL.h>
-#include <SDL/SDL_image.h>
 #include "../Adaboost/adaboost.h"
 
 typedef struct EltDB
-{ 
+{
+    int eigen;
     char *name;
-    StrongClassifier cls;
     struct EltDB *next;
     struct EltDB *old;
     
 } EltDB;
 
-void initializeDB(EltDB *begin);
+void initializeEltDB(EltDB *begin);
 
 #endif
