@@ -40,11 +40,11 @@ int main()
     FILE *f = fopen("ADATEST", "a");
 
     Sample  sample[5];
-    char file[] = "/home/zionlion/project/WhoIsWho/test1";
-    char file2[]= "/home/zionlion/project/WhoIsWho/test2";
-    char file3[]= "/home/zionlion/project/WhoIsWho/test3";
-    char file4[]= "/home/zionlion/project/WhoIsWho/test4";
-    char file5[]= "/home/zionlion/project/WhoIsWho/test5";
+    char file[] = "test1";
+    char file2[]= "test2";
+    char file3[]= "test3";
+    char file4[]= "test4";
+    char file5[]= "test5";
     sample[0].filename = file;
     sample[0].positive = 1;
     sample[1].filename = file2;
