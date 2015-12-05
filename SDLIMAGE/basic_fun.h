@@ -7,5 +7,6 @@ void init_sdl(void);
 SDL_Surface* load_image(char *path);
 SDL_Surface* display_image(SDL_Surface *img);
 void convert_to_grey(SDL_Surface *img);
+int *image_to_array(char *path);
 
 #endif
