@@ -298,7 +298,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             classifiers[j].polarity = polarity;
 
             free(featValues);    
-            printf("%d\n",j); 
+           // printf("%d\n",j); 
 
         }
 
@@ -412,6 +412,7 @@ int applyStrongClassifier(StrongClassifier strong, Sample sample, double blc)
     for(i = 0; i < strong.count; i++)
         sumAlpha += strong.wc[i].alpha;
     sumAlpha /= blc;
+    printf("THRESHOLD = %f\n", sumAlpha);
 
         double sumCls = 0.0;
     

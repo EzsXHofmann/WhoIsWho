@@ -1,0 +1,56 @@
+ WEAK CLASSIFIER 0 :
+INDEX : 8
+ERROR :0.285714
+THRESHOLD :4
+ ALPHA     : 0.916291
+
+ ---------------------------------------
+ WEAK CLASSIFIER 1 :
+INDEX : 25785
+ERROR :0.190476
+THRESHOLD :-8000
+ ALPHA     : 1.446919
+
+ ---------------------------------------
+ WEAK CLASSIFIER 2 :
+INDEX : 25786
+ERROR :0.163265
+THRESHOLD :-8000
+ ALPHA     : 1.634131
+
+ ---------------------------------------
+ WEAK CLASSIFIER 3 :
+INDEX : 25787
+ERROR :0.152381
+THRESHOLD :-8000
+ ALPHA     : 1.716048
+
+ ---------------------------------------
+ WEAK CLASSIFIER 0 :
+INDEX : 8
+ERROR :0.285714
+THRESHOLD :4
+ ALPHA     : 0.916291
+
+ ---------------------------------------
+ WEAK CLASSIFIER 1 :
+INDEX : 25785
+ERROR :0.190476
+THRESHOLD :-8000
+ ALPHA     : 1.446919
+
+ ---------------------------------------
+ WEAK CLASSIFIER 2 :
+INDEX : 25786
+ERROR :0.163265
+THRESHOLD :-8000
+ ALPHA     : 1.634131
+
+ ---------------------------------------
+ WEAK CLASSIFIER 3 :
+INDEX : 25787
+ERROR :0.152381
+THRESHOLD :-8000
+ ALPHA     : 1.716048
+
+ ---------------------------------------

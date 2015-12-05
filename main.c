@@ -34,7 +34,7 @@ int main()
     haarFeatures(matrix3,img3->w,img3->h,"test3");
     haarFeatures(matrix4,24,24,"test4");
     haarFeatures(matrix5,24,24,"test5");
-    FILE *f = fopen("ADATEST", "a");
+    //FILE *f = fopen("ADATEST", "a");
 
     Sample sample[5];
     //for(int i = 0; i < 5; i++)
@@ -55,9 +55,9 @@ int main()
     sample[4].filename = file5;
     sample[4].positive = 0;
 
-   StrongClassifier strong = adaBoost(sample,3,2,5,162336);
-//    cascade (sample, 3, 2, 0.5, 0.5, 0.5);
-    for(int i = 0; i < strong.count; i++)
+  // StrongClassifier strong = adaBoost(sample,3,2,5,162336);
+   cascade (sample, 3, 2, 0.5, 0.5, 0.5);
+   /* for(int i = 0; i < strong.count; i++)
     {
         fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n POLARITY:%d\n\n ",i,
                 strong.wc[i].index,strong.wc[i].error,
@@ -66,10 +66,10 @@ int main()
                 strong.wc[i].polarity);
     }
 
-    int boole = applyStrongClassifier(strong,sample[0]);
+    int boole = applyStrongClassifier(strong, sample[0], 2);
     printf("%d\n",boole);
 
-    fclose(f);
+    fclose(f);*/
     free(matrix);
     free(matrix2);
     free(matrix3);
