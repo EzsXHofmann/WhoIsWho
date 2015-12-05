@@ -28,7 +28,7 @@ void write(StrongClassifier strong)
 
 int sampleUp(StrongClassifier strong, Sample *samples[], int nbPos, int nbNeg)
 {
-    int i = nbPos;
+    int i = nbPos + 1;
     while (i < nbNeg + nbPos)
     {
         if( applyStrongClassifier(strong, *samples[i]))
@@ -46,10 +46,9 @@ float rateSetter(StrongClassifier strong, Sample samples[], int nb, int nb2)
 {
     float a = 0;
 	int k;
-	nb++;
-    for (int i = 0; i < nb; i++)
+    for (int i = 1; i <= nb; i++)
     {
-        k = applyStrongClassifier(strong, samples[i+nb2]);
+        k = applyStrongClassifier(strong, samples[i + nb2]);
         a= ( a * i + k) / ( i + 1);
     }
     return a;
