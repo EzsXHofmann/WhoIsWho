@@ -8,7 +8,6 @@
 #include "HAAR/features.h"
 #include "Adaboost/adaboost.h"
 #include <string.h>
-#include "CASCADE/cascade.h"
 
 int main()
 {
@@ -38,11 +37,9 @@ int main()
     haarFeatures(matrix3,img3->w,img3->h,"test3");
     haarFeatures(matrix4,24,24,"test4");
     haarFeatures(matrix5,24,24,"test5");
-    //FILE *f = fopen("ADATEST", "a");
+    FILE *f = fopen("ADATEST", "a");
 
-    Sample sample[5];
-    //for(int i = 0; i < 5; i++)
-      //  sample[i] = malloc(sizeof(sample));
+    Sample  sample[5];
     char file[] = "test1";
     char file2[]= "test2";
     char file3[]= "test3";
@@ -59,9 +56,8 @@ int main()
     sample[4].filename = file5;
     sample[4].positive = 0;
 
-    //StrongClassifier strong = adaBoost(sample,3,2,5,162336);
-    cascade (sample, 3, 2, 0.5, 0.5, 0.5);
-    /*for(int i = 0; i < strong.count; i++)
+    StrongClassifier strong = adaBoost(sample,3,2,5,162336);
+    for(int i = 0; i < strong.count; i++)
     {
         fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD : %d\n ALPHA : %f\n\n ",i,
                 strong.wc[i].index,strong.wc[i].error,
@@ -72,7 +68,7 @@ int main()
     int boole = applyStrongClassifier(strong,sample[0]);
     printf("%d\n",boole);
 
-    fclose(f);*/
+    fclose(f);
     free(matrix);
     free(matrix2);
     free(matrix3);

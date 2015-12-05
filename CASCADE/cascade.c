@@ -1,71 +1,102 @@
 #include<stdlib.h>
 # include<stdio.h>
 # include<err.h>
+# include "../Adaboost/adaboost.h"
+# include "cascade.h"
 
 
-# include<string.h>
-# include<assert.h>
-# include<maths.h>
-# include<float.h>
-# include<assert.h>
-# include<time.h>
-# include<ctype.h>
-
-# include"cls.h"
-
-
-
-/*// TOUT CE QUI N'EST PAS INITIALISÉ EST ARBITRAIRE !
-int cascade()    //Prend une image ou un tableau, on verra
+void swap2 (Sample *a, Sample *b)
 {
-    int f2;  //f_i+1
-    int d2;  //d_i+1
-    CalculCaractéristique(f2,d2,i,j);
-    int f=f2;
-    int d=d2;
-    int i=1;
-    while(i<K&& d>D)  //K=nombre d'étage choisi D=taux min de détection
-    {
-        int j=0;
-        while(f<F)     //F=taux de fausse alarme max
-        {  
-            CalculCaractéristique(f2,d2,i,j++);  //Calcul en ajoutants le caractéristique j de complexité/détection i;  f2 et d2 en global
-            d*=d2;
-            f*=f2;
-            j++;
-        }
-
-    }
-    return d>D;
-} */
-
-
-void cascade (Sample samples[], int nbPos, int nbNeg, int f, int FTarget, int D)
-{
-    int FMinus, FCurrent, dMinus, d;
-    FMinus=1;
-    int nFeature=1;
-    while (FCurrent> FTarget)
-    {
-        
-        FCurrent=FMinus;
-        while(Fcurrent>f*FMinus)
-        {
-            nFeature++;
-            //StrongClassifier strong with n[j] feature;
-            adaboost(sample[], nbPos, nbMin,strong);
-            //Operation FCurrent, d;
-            while(D*dMinus<d)
-            {
-                //Decrease threshold
-            }
-        }
-    }
-}
-
-void swap(int *a, int *b)
-{
-    int c = *a;
+    Sample c = *a;
     *a = *b;
     *b = c;
 }
+
+void write(StrongClassifier strong)
+{
+    FILE *f = fopen("SClist", "a");
+    for(int i = 0; i < strong.count; i++) 
+    {
+        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD :%d\n ALPHA     : %f\n\n ",i,
+        strong.wc[i].index,strong.wc[i].error,
+        strong.wc[i].treshold,
+        strong.wc[i].alpha);
+        fprintf(f,"---------------------------------------\n");
+    }
+    fclose(f);
+}
+
+int sampleUp(StrongClassifier strong, Sample *samples[], int nbPos, int nbNeg)
+{
+    int i = nbPos;
+    while (i < nbNeg + nbPos)
+    {
+        if( applyStrongClassifier(strong, *samples[i]))
+        {
+            nbNeg--;
+            swap2(samples[i], samples[nbPos + nbNeg]);
+        }
+        i++;
+    }
+    return nbNeg;
+}
+
+
+float rateSetter(StrongClassifier strong, Sample samples[], int nb, int nb2)
+{
+    float a = 0;
+	int k;
+	nb++;
+    for (int i = 0; i < nb; i++)
+    {
+        k = applyStrongClassifier(strong, samples[i+nb2]);
+        a= ( a * i + k) / ( i + 1);
+    }
+    return a;
+}
+
+
+void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, float D)
+{
+    /* f correspond au nombre maximum de faux positif
+     * FTarget est le nombre
+     * D est le taux minimum de detection
+     */
+    int etape = 2;
+    float FMinus, FCurrent, dMinus, d;
+    FMinus = 1;
+    dMinus = 0;
+    // Initialisation des F(n-1), d(n-1), F(n) et d(n) 
+    int nFeat = 1;
+    for (int i = 0; i < etape; i++)
+    {
+       StrongClassifier strong; 
+       do 
+        {
+            FCurrent = FMinus;
+            do
+            {
+                nFeat++;
+                //StrongClassifier strong with n[j] feature;
+                strong = adaBoost(samples, nbPos, nbNeg, 
+                        nFeat*2, nFeat*2);
+                //Operation taux de faux positif courrant
+                d = rateSetter(strong, samples, nbPos, 0);
+                FCurrent = rateSetter(strong, samples, nbNeg, nbPos);
+
+                while(D * dMinus > d)
+                {
+                    strong.wc->treshold/=2;
+                    d = rateSetter(strong, samples, nbPos, 0);
+                    FCurrent = rateSetter(strong, samples, nbNeg, nbPos);
+                }
+                nbNeg = sampleUp(strong, &samples, nbPos, nbNeg);
+                FMinus = FCurrent;
+                dMinus = d;
+            }while(FCurrent > f*FMinus);
+            write(strong);
+        }while(FCurrent > FTarget);
+        write(strong);
+    }
+}
+

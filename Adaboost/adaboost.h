@@ -2,6 +2,7 @@
 # define _ADABOOST_H_
 
 #include <math.h>
+void swap(int* a, int*b);
 typedef struct
 {
     char *filename; //Haar characs computed for the sample img

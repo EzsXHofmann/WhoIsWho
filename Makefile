@@ -3,11 +3,11 @@
 CC=gcc
  
 CPPFLAGS= `pkg-config --cflags sdl`
-CFLAGS= -Wall -Wextra -Werror -std=c99 -pedantic -g -fvar-tracking -O3 
+CFLAGS= -Wall -Wextra -Werror -std=c99 -pedantic -g -fvar-tracking -O0 
 LDFLAGS= -lm
 LDLIBS= `pkg-config --libs sdl` -lSDL_image 
  
-SRC= SDLIMAGE/pixel_operations.c SDLIMAGE/basic_fun.c SDLIMAGE/sat.c HAAR/compute.c HAAR/features.c  Adaboost/adaboost.c main.c 
+SRC= SDLIMAGE/pixel_operations.c SDLIMAGE/basic_fun.c SDLIMAGE/sat.c HAAR/compute.c HAAR/features.c  Adaboost/adaboost.c CASCADE/cascade.c main.c  
 OBJ= ${SRC:.c=.o}
  
 all: main 
@@ -22,4 +22,5 @@ clean:
 	rm -f Adaboost/*.o
 	rm -f ADATEST
 	rm -f TEST
+	rm -f cascade
 # END
