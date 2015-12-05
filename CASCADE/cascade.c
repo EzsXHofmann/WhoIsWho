@@ -26,15 +26,15 @@ void write(StrongClassifier strong)
     fclose(f);
 }
 
-int sampleUp(StrongClassifier strong, Sample *samples[], int nbPos, int nbNeg)
+int sampleUp(StrongClassifier strong, Sample samples[], int nbPos, int nbNeg)
 {
     int i = nbPos;
     while (i < nbNeg + nbPos)
     {
-        if( applyStrongClassifier(strong, *samples[i]))
+        if( applyStrongClassifier(strong, samples[i]))
         {
             nbNeg--;
-            swap2(samples[i], samples[nbPos + nbNeg]);
+            swap2(&samples[i], &samples[nbPos + nbNeg]);
         }
         i++;
     }
@@ -90,7 +90,7 @@ void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, fl
                     d = rateSetter(strong, samples, nbPos, 0);
                     FCurrent = rateSetter(strong, samples, nbNeg, nbPos);
                 }
-                nbNeg = sampleUp(strong, &samples, nbPos, nbNeg);
+                nbNeg = sampleUp(strong, samples, nbPos, nbNeg);
                 FMinus = FCurrent;
                 dMinus = d;
             }while(FCurrent > f*FMinus);
