@@ -18,11 +18,7 @@ int main()
     SDL_Surface *img3= load_image("img/bleu.jpg");
     SDL_Surface *img4= load_image("img/tete.jpg");
     SDL_Surface *img5= load_image("img/hs10.png");
-    convert_to_grey(img);
-    convert_to_grey(img2);
-    convert_to_grey(img3);
-    convert_to_grey(img4);
-    convert_to_grey(img5);
+
     int *matrix = malloc(img->h*img->w*sizeof(int));
     int *matrix2 = malloc(img2->h*img->w*sizeof(int));
     int *matrix3 = malloc(img3->h*img->w*sizeof(int));
