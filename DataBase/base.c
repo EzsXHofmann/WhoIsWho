@@ -35,8 +35,8 @@ void Update(char* filename,EltDB *begin)
 {
     EltDB *temp = begin;
     char *str = malloc(sizeof(char));
-    char *new = malloc(sizeof(char)*50);
-    new = "";
+    char *new = malloc(sizeof(char)*500);
+    new = "  ";
     FILE *fichier = fopen(filename,"r+");
     FILE *file = fopen("test_final","r+");
     while ((*str = fgetc(fichier))!=EOF)
