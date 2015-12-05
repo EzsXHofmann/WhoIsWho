@@ -136,6 +136,7 @@ double computeSum(int *values, double *weights, Sample samples[],
 int findTreshold(int *values, double *weights, Sample samples[],
                  int N, double range)
 {
+ 
     
     int min1 = 2000000;
     int min2= 0;
@@ -146,11 +147,10 @@ int findTreshold(int *values, double *weights, Sample samples[],
     {
         double resPos = computeSum(values,weights,samples,i,N,1);
         double resNeg = 3;
-        if(resPos > 0.5)
-            resNeg = computeSum(values, weights, samples,i,N,-1);
+         resNeg = computeSum(values, weights, samples,i,N,-1);
         double res = min(resPos, resNeg);
-        if(res == range)
-            return i;
+       if(res == range)
+          return i; 
         if(res < min1)
         {
             min1 = res;
@@ -298,7 +298,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             classifiers[j].polarity = polarity;
 
             free(featValues);    
-            
+            printf("%d\n",j); 
 
         }
 
@@ -405,13 +405,13 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
 
 }
 
-int applyStrongClassifier(StrongClassifier strong, Sample sample)
+int applyStrongClassifier(StrongClassifier strong, Sample sample, double blc)
 {
     int i;
     double sumAlpha = 0.0; 
     for(i = 0; i < strong.count; i++)
         sumAlpha += strong.wc[i].alpha;
-    sumAlpha /= 2.0;
+    sumAlpha /= blc;
 
         double sumCls = 0.0;
     
