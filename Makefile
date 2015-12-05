@@ -17,9 +17,13 @@ main: ${OBJ}
 clean:
 	rm -f *~ *.o
 	rm -f main
-	rm -f HAAR/*.o
-	rm -f SDLIMAGE/*.o
-	rm -f Adaboost/*.o
+	rm -f Adaboost/*.o Adaboost/*~
+	rm -f CASCADE/*.o CASCADE/*~
+	rm -f DataBase/*.o DataBase/*~
+	rm -f EIGEN/*.o EIGEN/*~
+	rm -f HAAR/*.o HAAR/*~
+	rm -f HAARCARACS
+	rm -f SDLIMAGE/*.o SDLIMAGE/*~
 	rm -f ADATEST
 	rm -f TEST
 	rm -f cascade

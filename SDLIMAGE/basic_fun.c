@@ -78,9 +78,9 @@ void convert_to_grey(SDL_Surface *img)
 	Uint8 r = 0,g = 0,b = 0;
 	Uint32 pixel = 0;
 	for (int i = 0; i < img->w; i++)
-    {
+  {
 		for (int j = 0; j < img->h; j++)
-        {
+    {
 			pixel = getpixel(img, i, j);
 			SDL_GetRGB(pixel, img->format, &r, &g, &b);
 			float lum = (r + g + b)/3;
@@ -93,4 +93,21 @@ void convert_to_grey(SDL_Surface *img)
 	}
 }
 
+int *image_to_array(char *path)
+{
+  init_sdl();
+  SDL_Surface *img = load_image(path);
+  int *array = malloc(img->w*img->h*sizeof(int));
+  Uint8 r = 0, g = 0, b = 0;
 
+  for (int j = 0; i < img->h; i++)
+    for (int i = 0; j < img->w; j++)
+    {
+      SDL_GetRGB(getpixel(img, i, j), &r, &g, &b);
+      *(array + j*img->w + i) = (r + g + b)/3;
+    }
+  
+  SDL_FreeSurface(img);
+
+  return array;
+}
