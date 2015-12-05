@@ -28,16 +28,24 @@ void write(StrongClassifier strong)
 
 int sampleUp(StrongClassifier strong, Sample samples[], int nbPos, int nbNeg)
 {
+    //Sample sam[] = sizeof(Sample) * (nbPos + nbNeg + 1);
+    /*for (int i=1; i<=nbPos; i++)
+    {
+        sam[i] = samples[i];
+    }*/
     int i = nbPos + 1;
+    int j = 0;
     while (i < nbNeg + nbPos)
     {
-        if( applyStrongClassifier(strong, samples[i]))
-        {
+        //printf("SAMPLEUP\n");
+        if( applyStrongClassifier(strong, samples[i], 2))
             nbNeg--;
-            swap2(&samples[i], &samples[nbPos + nbNeg]);
-        }
+        else
+            samples[j++] = samples[i];
         i++;
     }
+    //free (samples[])
+    //samples[]=sam[];
     return nbNeg;
 }
 
@@ -48,8 +56,10 @@ float rateSetter(StrongClassifier strong, Sample samples[], int nb, int nb2)
 	int k;
     for (int i = 1; i <= nb; i++)
     {
+        //printf("RATESETTER, %d, %d\n",i,nb);  
         k = applyStrongClassifier(strong, samples[i + nb2]);
         a= ( a * i + k) / ( i + 1);
+        printf("k, %d a, %f ,i %d \n",k,a,i);
     }
     return a;
 }
@@ -61,12 +71,12 @@ void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, fl
      * FTarget est le nombre
      * D est le taux minimum de detection
      */
-    int etape = 2;
+    int etape = 1;
     float FMinus, FCurrent, dMinus, d;
     FMinus = 1;
     dMinus = 0;
     // Initialisation des F(n-1), d(n-1), F(n) et d(n) 
-    int nFeat = 1;
+    int nFeat = 2;
     for (int i = 0; i < etape; i++)
     {
        StrongClassifier strong; 
@@ -78,14 +88,15 @@ void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, fl
                 nFeat++;
                 //StrongClassifier strong with n[j] feature;
                 strong = adaBoost(samples, nbPos, nbNeg, 
-                        nFeat*2, nFeat*2);
+                        nFeat, 162336);
                 //Operation taux de faux positif courrant
                 d = rateSetter(strong, samples, nbPos, 0);
                 FCurrent = rateSetter(strong, samples, nbNeg, nbPos);
 
                 while(D * dMinus > d)
                 {
-                    strong.wc->treshold/=2;
+                    printf("dMinus, %f d, %f\n",dMinus,d);
+                    applyStrongClassifier(strong, samples[1], 0.5)
                     d = rateSetter(strong, samples, nbPos, 0);
                     FCurrent = rateSetter(strong, samples, nbNeg, nbPos);
                 }
