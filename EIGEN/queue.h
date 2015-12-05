@@ -4,6 +4,7 @@
 struct queue 
 {
    void *val;
+   int eigen;
    struct queue *next;
 };
 
