@@ -10,17 +10,15 @@ void initializeEltDB(EltDB *begin)
 {
     EltDB *temp = begin;
     begin->old = NULL;
-    char *path = "../img/"; 
-    GError **error = malloc(sizeof(GError*));
-    printf("0 \n");
-    GDir* dir = g_dir_open(path, 0, error);
-    printf("1\n");
+    char *path = "../img/faces/yalefacesgood"; 
+    //GError **error = malloc(sizeof(GError*)); 
+    GDir* dir = g_dir_open(path, 0, NULL);
     G_CONST_RETURN gchar* file = g_dir_read_name(dir);
-    printf("2\n");
     FILE *fichier = fopen("test","r+");
-    while (file != NULL)
+    while (file != NULL && begin)
     {
-        strcpy(begin->name, file);
+        //strcpy(begin->name,(char*)file);
+        begin->name = (char*)file;
         fputs(begin->name,fichier);
         fputc('/',fichier);
         fputs("2555",fichier);
@@ -36,42 +34,55 @@ void initializeEltDB(EltDB *begin)
 void Update(char* filename,EltDB *begin)
 {
     EltDB *temp = begin;
-    char str;
-    char* new = "";
+    char *str = malloc(sizeof(char));
+    char *new = malloc(sizeof(char)*50);
+    new = "";
     FILE *fichier = fopen(filename,"r+");
-    while ((str = fgetc(fichier))!=EOF)
-    {   
-        if(str == '/')
+    FILE *file = fopen("test_final","r+");
+    while ((*str = fgetc(fichier))!=EOF)
+    {      
+        if(*str == '/')
         {
             begin->name = new;
+            fputs(begin->name,file);//SETFAULT
             new = "";
         }
-        else if(str == '\n')
+        else if(*str == '\n')
         {
-            begin->next = malloc(sizeof(EltDB*));
+            printf("\n");
+            begin->next = malloc(sizeof(EltDB));
             begin = begin->next;
-           // begin->eigen = atoi(new);
+            begin->old = begin;
+            begin->eigen = atoi(new);
+            fputc(begin->eigen,file);
             new = "";
         }
         else
         {
-            new = strcat(new,&(str));
+           strcat(new,str);//SETFAULT   
         }
     }
+    begin->next = NULL;
     begin = temp;
+    
 }
 
-void Write(EltDB *begin)
+/*void Write(EltDB *begin)
 {
     EltDB *temp = begin;
     FILE *fichier = fopen("test_final","r+");
-    while(temp)
+    while(begin)
     {
-        fputs(temp->name,fichier);
+        printf("boucle\n");
+        //printf("%s\n",begin->name);
+        fputs(begin->name,fichier);
+        printf("fputs(begin->name,fichier)\n");
         //fputc(temp->eigen,fichier);
-        temp = temp->next;
+        begin = begin->next;
+        printf("begin = begin->next\n");
     }
-}
+    begin = temp;
+}*/
 int ajout_eltDB(EltDB *begin, gchar *name)
 {
     EltDB *temp = begin;
@@ -134,6 +145,6 @@ int main()
 {
     EltDB *begin = malloc(sizeof(EltDB));
     initializeEltDB(begin);
-    //Update("test",begin);
+    Update("test",begin);
     //Write(begin);
 }
