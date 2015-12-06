@@ -412,7 +412,7 @@ int applyStrongClassifier(StrongClassifier strong, Sample sample, double blc)
     for(i = 0; i < strong.count; i++)
         sumAlpha += strong.wc[i].alpha;
     sumAlpha /= blc;
-    printf("THRESHOLD = %f\n", sumAlpha);
+    printf("THRESHOLD = %f, %f\n", sumAlpha, blc);
 
         double sumCls = 0.0;
     

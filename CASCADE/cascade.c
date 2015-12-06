@@ -12,6 +12,13 @@ void swap2 (Sample *a, Sample *b)
     *b = c;
 }
 
+void writeSam(Sample samples[], int nbPos, int nbNeg)
+{
+    for (int i=0; i < nbPos + nbNeg; i++)
+        printf("| %s", samples[i].filename);
+    printf("| \n\n");
+}
+
 void write(StrongClassifier strong)
 {
     FILE *f = fopen("SClist", "a");
@@ -82,39 +89,47 @@ void cascade (Sample samp[], int nbPos, int nbNeg, float f, float FTarget, float
     // Initialisation des F(n-1), d(n-1), F(n) et d(n) 
     int nFeat = 2;
     int neg = nbNeg;
-    for (int i = 0; i < etape; i++)
-    {
-       nbNeg = neg;
-       Sample *samples = malloc(sizeof (Sample) * (nbPos + nbNeg));
-       for (int a = 0; a < nbPos + nbNeg; a++)
-           samples[a] = samp[a];
-       StrongClassifier strong;
-       do 
+    printf("1er tableau\n");
+    writeSam(samp, nbPos, nbNeg);
+        for (int i = 0; i < etape; i++)
         {
-            FCurrent = FMinus;
-            do
+            nbNeg = neg;
+            Sample *samples = malloc(sizeof (Sample) * (nbPos + nbNeg));
+            for (int a = 0; a < nbPos + nbNeg; a++)
+                samples[a] = samp[a];
+            //printf("\n1er tableau %d\n", i);
+            //writeSam(samples, nbPos, nbNeg);
+            StrongClassifier strong;
+            do 
             {
-                nFeat++;
-                //StrongClassifier strong with n[j] feature;
-                strong = adaBoost(samples, nbPos, nbNeg, 
-                        nFeat, 162336);
-                //Operation taux de faux positif courrant
-                d = rateSetter(strong, samples, nbPos, 0, 2);
-                FCurrent = rateSetter(strong, samples, nbNeg, nbPos, 2);
-                int j = 0;
-                while(D * dMinus > d)
+                FCurrent = FMinus;
+                do
                 {
-                    printf("dMinus, %f d, %f\n",dMinus,d);
-                    d = rateSetter(strong, samples, nbPos, 0, j++);
-                }
-                printf("\nd, %f\n",d);
-                FCurrent = rateSetter(strong, samples, nbNeg, nbPos, j);
-                nbNeg = sampleUp(strong, samples, nbPos, nbNeg,  j);
-                FMinus = FCurrent;
-                dMinus = d;
-            }while(FCurrent > f*FMinus);
-        }while(FCurrent > FTarget);
+                    nFeat++;
+                    //StrongClassifier strong with n[j] feature;
+                    printf("\nTableau %d, %d, %d\n", i, nbPos, nbNeg);
+                    writeSam(samples, nbPos, nbNeg);
+                    strong = adaBoost(samples, nbPos, nbNeg, 
+                            nFeat, 162336);
+                    //Operation taux de faux positif courrant
+                    d = rateSetter(strong, samples, nbPos, 0, 2);
+                    FCurrent = rateSetter(strong, samples, nbNeg, nbPos, 2);
+                    int j = 2;
+                    while(D * dMinus > d)
+                    {
+                        printf("dMinus, %f d, %f\n",dMinus,d);
+                        d = rateSetter(strong, samples, nbPos, 0, j++);
+                    }
+                    printf("\nd, %f\n",d);
+                    FCurrent = rateSetter(strong, samples, nbNeg, nbPos, j);
+                    nbNeg = sampleUp(strong, samples, nbPos, nbNeg,  j);
+                    FMinus = FCurrent;
+                    dMinus = d;
+                }while(FCurrent > f*FMinus);
+            }while(FCurrent > FTarget);
         write(strong);
+        printf("\nTableauSortie %d\n", i);
+        writeSam(samples, nbPos, nbNeg);
         free(samples);
     }
      printf("END\n");
