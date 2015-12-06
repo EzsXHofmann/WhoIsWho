@@ -7,4 +7,8 @@ void mean_images(EltDB *elt, int *mean);
 
 void difference(int *set, int *mean, int nb);
 
+int *transposee(int *set, int nb);
+
+int *covariance(int *set, int nb);
+
 # endif
