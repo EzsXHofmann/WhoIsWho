@@ -107,7 +107,7 @@ int isdetz(int *covar, int lambda)
   for (int j = 0; j < 23; j++)
   {
     int i = j + 1;
-    if (*(covar + j*24 + j) == 0)
+    if (det[j][j] == 0)
     {
       int ok = 1;
       for (; i < 24 & !det[i][j]; i++);
@@ -132,6 +132,10 @@ int isdetz(int *covar, int lambda)
     else
     {
       for (; i < 24; i++)
+      {
+        for (int g = 0; g < 24; g++)
+        {
+
 
 
 
