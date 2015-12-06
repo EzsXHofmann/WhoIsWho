@@ -34,7 +34,7 @@ int goodformat(gchar *path)
       for (int i = 2; i >= 0; i--, len--)
         ext[i] = path[len - 1];
     
-      return !(strcmp(ext, "png") || strcmp(ext, "jpg") || strcmp(ext, "gif") || strcmp(ext, "bmp"));
+      return (strcmp(ext, "png") || strcmp(ext, "jpg") || strcmp(ext, "gif") || strcmp(ext, "bmp"));
     }
 
     return 0;
@@ -62,7 +62,7 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
             {
                 char str[100];
                 char *src = (char *)path;
-                char *dst = "../img/faces/yalefacesgood";
+                char *dst = "img/faces/yalefacesgood";
                 sprintf(str, "cp -r %s %s", src, dst);
                 if (system(str))
                     printf("Error in cp");
@@ -108,7 +108,7 @@ void initialize_window(GtkWindow* fenetre)
     gtk_window_set_default_size(fenetre, width, height); // Taille par default(resize auto)
     gtk_window_resize(fenetre, width, height); // Taille actuelle
     gtk_window_set_position(fenetre, GTK_WIN_POS_CENTER); // Ouverture au milieu de l'écran
-    gboolean icone = gtk_window_set_icon_from_file(fenetre, "logo.jpg", NULL);// tente de mettre une icone
+    gboolean icone = gtk_window_set_icon_from_file(fenetre, "Graphic_interface/logo.jpg", NULL);// tente de mettre une icone
     if(icone)
     {
         gtk_window_iconify(fenetre);//iconifier
