@@ -3,7 +3,7 @@
 # include<err.h>
 # include "../Adaboost/adaboost.h"
 # include "cascade.h"
-
+# include <string.h>
 
 void swap2 (Sample *a, Sample *b)
 {
@@ -17,12 +17,14 @@ void write(StrongClassifier strong)
     FILE *f = fopen("SClist", "a");
     for(int i = 0; i < strong.count; i++) 
     {
-        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\nTHRESHOLD :%d\n ALPHA     : %f\n\n ",i,
+        fprintf(f," WEAK CLASSIFIER %d :\nINDEX : %d\nERROR :%f\t"
+        "\nTHRESHOLD :%d\nALPHA     : %f\n  P  :%d\n\n ",i,
         strong.wc[i].index,strong.wc[i].error,
         strong.wc[i].treshold,
-        strong.wc[i].alpha);
-        fprintf(f,"---------------------------------------\n");
+        strong.wc[i].alpha,
+        strong.wc[i].polarity);
     }
+    fprintf(f,"---------------------------------------\n"); 
     fclose(f);
 }
 
@@ -34,12 +36,12 @@ int k)
     {
         sam[i] = samples[i];
     }*/
-    int i = nbPos + 1;
-    int j = 0;
+    int i = nbPos;
+    int j = nbPos;
     while (i < nbNeg + nbPos)
     {
         //printf("SAMPLEUP\n");
-        if( applyStrongClassifier(strong, samples[i], k))
+        if(!applyStrongClassifier(strong, samples[i], k))
             nbNeg--;
         else
             samples[j++] = samples[i];
@@ -56,9 +58,9 @@ j)
 {
     float a = 0;
 	int k;
-    for (int i = 1; i <= nb; i++)
+    for (int i = 0; i < nb; i++)
     {
-        //printf("RATESETTER, %d, %d\n",i,nb);  
+        printf("RATE, %d, %d\n",i,nb2);  
         k = applyStrongClassifier(strong, samples[i + nb2], j);
         a= ( a * i + k) / ( i + 1);
         printf("k, %d a, %f ,i %d \n",k,a,i);
@@ -67,21 +69,26 @@ j)
 }
 
 
-void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, float D)
+void cascade (Sample samp[], int nbPos, int nbNeg, float f, float FTarget, float D)
 {
     /* f correspond au nombre maximum de faux positif
      * FTarget est le nombre
      * D est le taux minimum de detection
      */
-    int etape = 1;
+    int etape = 3;
     float FMinus, FCurrent, dMinus, d;
     FMinus = 1;
-    dMinus = 0;
+    dMinus = 1;
     // Initialisation des F(n-1), d(n-1), F(n) et d(n) 
     int nFeat = 2;
+    int neg = nbNeg;
     for (int i = 0; i < etape; i++)
     {
-       StrongClassifier strong; 
+       nbNeg = neg;
+       Sample *samples = malloc(sizeof (Sample) * (nbPos + nbNeg));
+       for (int a = 0; a < nbPos + nbNeg; a++)
+           samples[a] = samp[a];
+       StrongClassifier strong;
        do 
         {
             FCurrent = FMinus;
@@ -99,15 +106,17 @@ void cascade (Sample samples[], int nbPos, int nbNeg, float f, float FTarget, fl
                 {
                     printf("dMinus, %f d, %f\n",dMinus,d);
                     d = rateSetter(strong, samples, nbPos, 0, j++);
-                    FCurrent = rateSetter(strong, samples, nbNeg, nbPos, j);
                 }
-                nbNeg = sampleUp(strong, samples, nbPos, nbNeg,  3);
+                printf("\nd, %f\n",d);
+                FCurrent = rateSetter(strong, samples, nbNeg, nbPos, j);
+                nbNeg = sampleUp(strong, samples, nbPos, nbNeg,  j);
                 FMinus = FCurrent;
                 dMinus = d;
             }while(FCurrent > f*FMinus);
-            write(strong);
         }while(FCurrent > FTarget);
         write(strong);
+        free(samples);
     }
+     printf("END\n");
 }
 
