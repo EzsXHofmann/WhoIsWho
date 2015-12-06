@@ -141,7 +141,7 @@ int findTreshold(int *values, double *weights, Sample samples[],
     int min1 = 2000000;
     int min2= 0;
    
-    int first = -8000;
+    int first = -15000;
     int last  =  1000;
     for(int i = first; i < last ; i++)
     {
@@ -150,7 +150,7 @@ int findTreshold(int *values, double *weights, Sample samples[],
          resNeg = computeSum(values, weights, samples,i,N,-1);
         double res = min(resPos, resNeg);
        if(res == range)
-          return i; 
+          min2 = i; 
         if(res < min1)
         {
             min1 = res;
