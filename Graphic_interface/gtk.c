@@ -5,29 +5,65 @@
 #include "../Database/base.c"*/
 
 //gcc -o gtk gtk.c `pkg-config --libs --cflags gtk+-2.0`
-void ajouter_img(gpointer user_data)
+
+/*gchar* get_filename(gchar* name)
 {
-   FILE* file = fopen("test","r+");
-   fputs((char*)user_data,file);
-   fputc('\n',file);
+    gchar s[99];
+    int i =0;
+    gchar* new = name;
+    while(*new != '\0')
+    {
+        if(*new == '/')
+        {
+            s[i] = "";
+        }
+        else 
+        {
+            s[i] += *new;
+        }
+        new++;
+    }
+    return s;
+} */  
+
+
+
+void ajouter_img(GtkWidget* bouton3 ,gpointer window)
+{
+    bouton3 = NULL;
+    FILE* file = fopen("test","a");
+    GtkWidget* dialog =  gtk_file_chooser_dialog_new("Choose a file",GTK_WINDOW(window),
+                                                    GTK_FILE_CHOOSER_ACTION_OPEN,GTK_STOCK_OK,GTK_RESPONSE_OK
+                                                    ,GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,NULL);
+    //gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),g_get_temp_dir());
+    gtk_widget_show_all(dialog);
+    gint resp = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(resp == GTK_RESPONSE_OK)
+    {
+        fputs(gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(dialog)),file);
+        fputc('\n',file);
+    }
+    gtk_widget_destroy(dialog);
+   /*fputs(user_data,file);
+   fputc('\n',file);*/
 }
 
 void button_ajout(GtkWidget* window)
 {
-    GtkWidget *bouton = gtk_button_new_with_label("Ajouter à la DATABASE");
+    // INIT
+    GtkWidget* bouton = gtk_button_new_with_label("Ajouter à la DATABASE");
     GtkWidget* bouton2 = gtk_button_new_with_label("       Detecter Visage       ");
-    GtkWidget * bouton3 = gtk_file_chooser_button_new("      JOINDRE FICHIER      ",GTK_FILE_CHOOSER_ACTION_OPEN);
-    gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER(bouton3),"/home/hamza/Images");
-    gchar * filename = gtk_file_chooser_get_current_folder (GTK_FILE_CHOOSER(bouton3));
-    gchar * filename2 = gtk_file_chooser_get_uri(GTK_FILE_CHOOSER(bouton3));
-    g_print("%s\n",(char*)filename);
-    g_print("%s\n",(char*)filename2);
+    GtkWidget* bouton3 = gtk_button_new_with_label("      JOINDRE FICHIER      ");
+    
+    //TABLE
     GtkWidget* table = gtk_table_new(3,3,TRUE);
     gtk_container_add(GTK_CONTAINER(window),GTK_WIDGET(table));
     gtk_table_attach(GTK_TABLE(table),bouton,3,4,3,4,GTK_EXPAND,GTK_EXPAND,0,0);
     gtk_table_attach(GTK_TABLE(table),bouton2,3,4,4,5,GTK_EXPAND,GTK_EXPAND,0,0);
     gtk_table_attach(GTK_TABLE(table),bouton3,3,4,5,6,GTK_EXPAND,GTK_EXPAND,0,0);
-    g_signal_connect(G_OBJECT(bouton),"clicked",G_CALLBACK(ajouter_img),gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(bouton3)));
+    
+    //EVENT
+    g_signal_connect(bouton3,"clicked",G_CALLBACK(ajouter_img),window);
     gtk_widget_show_all(window);
     gtk_main();
 }

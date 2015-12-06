@@ -16,7 +16,7 @@ main : ${OBJ}
 
 clean:
 	rm -f *~ *.o 
-	rm -f main
+	rm -f gtk
 
 #gcc `pkg-config --cflags gtk+-2.0` -o console inter_graf.c `pkg-config --libs gtk+-2.0`
 # END
