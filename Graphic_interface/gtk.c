@@ -4,8 +4,6 @@
 # include <string.h>
 # include "../DataBase/base.h"
 
-//gcc -o gtk gtk.c `pkg-config --libs --cflags gtk+-2.0`
-
 gchar* get_filename(gchar* name)
 {
     gchar *s = malloc(100*sizeof(gchar));
@@ -46,7 +44,7 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
 {
     if (bouton3)
     {
-        FILE* file = fopen("test", "a");
+        FILE* file = fopen("test1", "a");
         GtkWidget* dialog = gtk_file_chooser_dialog_new("Choose a file",
                                                         GTK_WINDOW(window),
                                                         GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -117,7 +115,7 @@ void initialize_window(GtkWindow* fenetre)
     }
 }
 
-int main(int argc, char **argv)
+/*int main(int argc, char **argv)
 {
     //VARIABLE
     gtk_init(&argc, &argv);
@@ -132,22 +130,8 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT(MainWindow), "delete-event", G_CALLBACK(gtk_main_quit), NULL);
     
     //gtk_container_add(GTK_CONTAINER(MainWindow),file_button);
-    /*gtk_widget_show_all(MainWindow); //show window
-    gtk_main();*/
+    //gtk_widget_show_all(MainWindow); //show window
+    //gtk_main();
     button_ajout(MainWindow);
     return EXIT_SUCCESS;
-}
-
-/*int main(int argc, char** argv)
-{
-    gtk_init(&argc,&argv);
-    GtkWidget *window,*bouton;
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    bouton = gtk_button_new_with_label("Ajouter");
-    g_signal_connect(G_OBJECT(window),"delete-event",G_CALLBACK(gtk_main_quit),NULL);
-    gtk_container_add(GTK_CONTAINER(window),bouton);
-    gtk_widget_show_all(window); //show window
-    gtk_main();
-    return EXIT_SUCCESS;
-
 }*/

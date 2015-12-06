@@ -16,7 +16,8 @@ int main(int argc, char **argv)
     initialize_window(fenetre);
     
     //EVENT
-    g_signal_connect(G_OBJECT(MainWindow), "delete-event", G_CALLBAC    K(gtk_main_quit), NULL);
+    g_signal_connect(G_OBJECT(MainWindow), "delete-event",
+                     G_CALLBACK(gtk_main_quit), NULL);
      
     button_ajout(MainWindow);
     return EXIT_SUCCESS;

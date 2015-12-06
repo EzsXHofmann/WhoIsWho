@@ -152,9 +152,9 @@ int ajout_eltDB(EltDB *begin, gchar *filename)
     return temp;
 }*/
 
-int main()
+/*int main()
 {
     EltDB *begin = malloc(sizeof(EltDB));
     initializeEltDB(begin);
     Update(begin);
-}
+}*/

@@ -1,5 +1,5 @@
-# ifndef _ADABOOST_H_
-# define _ADABOOST_H_
+# ifndef ADABOOST_H_
+# define ADABOOST_H_
 
 #include <math.h>
 void swap(int* a, int*b);
