@@ -1,12 +1,15 @@
 # include <stdlib.h>
+# include <stdio.h>
 # include <gtk/gtk.h>
 /*#include "../Database/base.h"
 #include "../Database/base.c"*/
 
 //gcc -o gtk gtk.c `pkg-config --libs --cflags gtk+-2.0`
-void ajouter_img(GtkWidget *widget,gpointer* user_data)
+void ajouter_img(gpointer user_data)
 {
-    g_print("%s\n",(char*)user_data);
+   FILE* file = fopen("test","r+");
+   fputs((char*)user_data,file);
+   fputc('\n',file);
 }
 
 void button_ajout(GtkWidget* window)
@@ -39,7 +42,10 @@ void initialize_window(GtkWindow* fenetre)
     gtk_window_resize(fenetre,width,height); // Taille actuelle
     gtk_window_set_position(fenetre,GTK_WIN_POS_CENTER); // Ouverture au milieu de l'écran
     gboolean icone = gtk_window_set_icon_from_file(fenetre, "logo.jpg", NULL);// tente de mettre une icone
-    gtk_window_iconify(fenetre);//iconifier
+    if(icone)
+    {
+        gtk_window_iconify(fenetre);//iconifier
+    }
 }
 int main(int argc, char **argv)
 {
@@ -48,7 +54,7 @@ int main(int argc, char **argv)
     GtkWidget* MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GtkWindow* fenetre = GTK_WINDOW(MainWindow);
     
-    //SETUP WINDO
+    //SETUP WINDOW
     
     initialize_window(fenetre);
           
