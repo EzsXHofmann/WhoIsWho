@@ -198,9 +198,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
             if(nbNeg)
                 weights[i] = 1.0/nbNeg;
         }
-         WeakClassifier *classifiers = malloc(sizeof(WeakClassifier) * NbFeatures);
 
-    
     //Boucle principale (boosting)
     for(int t = 0; t < T; t++)
     {
@@ -225,8 +223,9 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         //un classifieur faible hj
         //On trouve ensuite le classifieur
         //Avec le taux d'erreur minimal
-        
-        for(j = 0; j < NbFeatures ; j++)
+        WeakClassifier *classifiers = malloc(sizeof(WeakClassifier) * NbFeatures);
+
+        for(j = 0; j < NbFeatures; j++)
         {
             if(usedFeature[j])
             {
@@ -312,16 +311,12 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
 
         for(j = 1; j < NbFeatures; j++)
         {
-            if(classifiers[j].error < minError && 
-                    classifiers[j].error != 0
-                    && strong.wc[strong.count-1].error != classifiers[j].error)
+            if(classifiers[j].error < minError && classifiers[j].error != 0)
             {
-                
                 treshold = classifiers[j].treshold;
                 minError = classifiers[j].error;
                 minIndex = j;
                 polarity = classifiers[j].polarity;
-
                 
             }
         }
@@ -338,7 +333,6 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         double alpha = log(1/beta);
 
         usedFeature[minIndex] = 1;
-   
         WeakClassifier cls;
         cls.treshold = treshold;
         cls.error = minError;   
@@ -364,7 +358,7 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
         
 
         printf("stage : %d j : %d\n",t,j);
-    
+        free(classifiers);
         for(i = 0; i < nbSamples; i++)
             if(files[i])
                 fclose(files[i]);
@@ -405,7 +399,6 @@ StrongClassifier adaBoost(Sample samples[], int nbPos, int nbNeg
 
     free(weights);
     free(usedFeature);
-    free(classifiers);
     //fclose(test);
 
     return strong;
@@ -419,7 +412,7 @@ int applyStrongClassifier(StrongClassifier strong, Sample sample, double blc)
     for(i = 0; i < strong.count; i++)
         sumAlpha += strong.wc[i].alpha;
     sumAlpha /= blc;
-    printf("THRESHOLD = %f, %f\n", sumAlpha, blc);
+    printf("THRESHOLD = %f\n", sumAlpha);
 
         double sumCls = 0.0;
     
