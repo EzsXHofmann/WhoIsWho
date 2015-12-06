@@ -3,6 +3,8 @@
 /*#include "../Database/base.h"
 #include "../Database/base.c"*/
 
+//gcc -o gtk gtk.c `pkg-config --libs --cflags gtk+-2.0`
+
 int main(int argc, char **argv)
 {
     //VARIABLE
