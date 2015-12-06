@@ -46,7 +46,7 @@ char* catstr(char* new,char str,char* s)
     s[i+1] = '\0';
     return s;
 }
-void Update(char* filename,EltDB *begin)
+void Update(EltDB *begin)
 {
     EltDB *temp = begin;
     temp->eigen = 0;
@@ -56,7 +56,7 @@ void Update(char* filename,EltDB *begin)
     char str;
     char *new = malloc(sizeof(char)*50);
     new = "";
-    FILE *fichier = fopen(filename,"r+");
+    FILE *fichier = fopen("test","r+");
     FILE *file = fopen("test_final","r+");
     while ((str = fgetc(fichier))!=EOF)
     {      
@@ -156,5 +156,5 @@ int main()
 {
     EltDB *begin = malloc(sizeof(EltDB));
     initializeEltDB(begin);
-    Update("test",begin);
+    Update(begin);
 }

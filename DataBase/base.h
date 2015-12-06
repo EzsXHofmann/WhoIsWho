@@ -1,8 +1,6 @@
 #ifndef BASE_H_
 #define BASE_H_
 
-#include "../Adaboost/adaboost.h"
-
 typedef struct EltDB
 {
     int eigen;
@@ -13,5 +11,12 @@ typedef struct EltDB
 } EltDB;
 
 void initializeEltDB(EltDB *begin);
+
+char* catstr(char* new, char str, char* s);
+
+void Update(EltDB *begin);
+
+int ajout_eltDB(EltDB *begin, gchar *filename);
+
 
 #endif

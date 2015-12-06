@@ -2,8 +2,7 @@
 # include <stdio.h>
 # include <gtk/gtk.h>
 # include <string.h>
-/*#include "../Database/base.h"
-#include "../Database/base.c"*/
+# include "../DataBase/base.h"
 
 //gcc -o gtk gtk.c `pkg-config --libs --cflags gtk+-2.0`
 
@@ -69,7 +68,9 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
                 sprintf(str, "cp -r %s %s", src, dst);
                 if (system(str))
                     printf("Error in cp");
-
+                EltDB *begin = malloc(sizeof(EltDB));
+                Update(begin);
+                ajout_eltDB(begin,get_filename(path));
                 fputs(get_filename(path), file);
                 fputc('\n', file);
             }
