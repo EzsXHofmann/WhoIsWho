@@ -37,16 +37,17 @@ int goodformat(gchar *path)
       for (int i = 2; i >= 0; i--, len--)
         ext[i] = path[len - 1];
     
-      return (!strcmp(ext, "png") || !strcmp(ext, "jpg") || !strcmp(ext, "gif") || !strcmp(ext, "bmp"));
+      return (strcmp(ext, "png") || strcmp(ext, "jpg") || strcmp(ext, "gif") || strcmp(ext, "bmp"));
     }
 
     return 0;
 }
 
-void cp_system(GtkWidget *window,gpointer path)
+void cp_system(GtkWidget *window, gpointer path)
 {
     path = (gchar*)path;
-    if(window)
+    
+    if (window)
     {
         gchar *filename = get_filename(path);
         if (goodformat(filename))
@@ -56,14 +57,13 @@ void cp_system(GtkWidget *window,gpointer path)
             char *dst = "img/faces";
             sprintf(str, "cp -r %s %s", src, dst);
             if (system(str))
-            printf("Error in cp");
-            //ajout_eltDB(begin, get_filename(path))
+              printf("Error in cp");
+            ajout_eltDB(begin, get_filename(path));
             printf("%s\n",(begin->next)->name);
         }
         else
-            printf("Bad format of: %s",filename);
-        }
-
+            printf("Bad format of: %s\n", filename);
+    }
 }
 
 
@@ -82,8 +82,8 @@ void ajouter_img(GtkWidget *window, gpointer bouton)
         gint resp = gtk_dialog_run(GTK_DIALOG(dialog));
         if (resp == GTK_RESPONSE_OK)
         {
-            GtkWidget * label = gtk_label_new("Fichier Join");
-            gtk_container_add (GTK_CONTAINER(window),label);
+            //GtkWidget * label = gtk_label_new("Fichier Join");
+            //gtk_container_add (GTK_CONTAINER(window),label);
             gchar *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
             g_signal_connect(bouton, "clicked", G_CALLBACK(cp_system),path);
             gtk_widget_destroy(dialog);

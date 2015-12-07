@@ -94,7 +94,19 @@ EltDB* Initialize()
     return begin;
 }
 
-void ajout_eltDB(EltDB *begin, gchar *filename)
+void writelist(EltDB *begin)
+{
+    FILE *file = fopen("DataBase/test_final", "r+");
+    EltDB *tmp = begin->next;
+    while (tmp->next)
+    {
+        fputs(tmp->name, file);
+        fprintf(file, "/%d\n", tmp->eigen);
+        tmp = tmp->next;
+    }
+}
+
+/*void ajout_eltDB(EltDB *begin, gchar *filename)
 {
     EltDB *temp = begin;
     
@@ -103,16 +115,30 @@ void ajout_eltDB(EltDB *begin, gchar *filename)
 
     if (strcmp(temp->name, filename) != 0)
     {
-        FILE *file = fopen("DataBase/test", "a");
-        temp->next = malloc(sizeof(EltDB));
+        //FILE *file = fopen("DataBase/test", "a");
+        //temp->next = malloc(sizeof(EltDB));
         temp->next->old = temp;
         temp = temp->next;
         temp->eigen = 2555;
-        strcpy(temp->name, filename);
+        temp->name = (char *)filename;
         (begin->eigen)++;
         fputs(temp->name, file);
         fprintf(file, "%d\n", temp->eigen);
     }
+}*/
+
+void ajout_eltDB(EltDB *begin, gchar *filename)
+{
+    EltDB *new = malloc(sizeof(EltDB));
+    new->next = begin->next;
+    new->old = begin;
+    begin->next = new;
+    new->name = (char *)filename;
+    (begin->eigen)++;
+    new->eigen = 25555;
+    FILE *file = fopen("DataBase/test", "a");
+    fputs(new->name, file);
+    fprintf(file, "/%d\n", new->eigen);
 }
 
 /*int supp_eltDB(EltDB *begin, gchar *name)

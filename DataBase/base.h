@@ -16,6 +16,8 @@ char* catstr(char* new, char str, char* s);
 
 EltDB* Initialize();
 
+void writelist(EltDB *begin);
+
 void ajout_eltDB(EltDB *begin, gchar *filename);
 
 
