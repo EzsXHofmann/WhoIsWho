@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <string.h>
+#include <gtk/gtk.h>
 #include "SDLIMAGE/pixel_operations.h"
 #include "SDLIMAGE/basic_fun.h"
 #include "SDLIMAGE/sat.h"
 #include "HAAR/features.h"
 #include "Adaboost/adaboost.h"
-#include <string.h>
 #include "CASCADE/cascade.h"
 #include "DataBase/base.h"
 #include "Graphic_interface/gtk.h"
@@ -146,7 +147,7 @@ int main(int argc, char* argv[])
     
     printf("--------------------------------------------------------\n");
     
-    haarFeatures(matrix, img->w, img->h);
+    haarFeatures(matrix, img->w, img->h, "img/homme.jpg");
 
     SDL_FreeSurface(img);
     free(matrix);
