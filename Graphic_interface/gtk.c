@@ -91,11 +91,8 @@ void ajouter_img(GtkWidget *window, gpointer bouton)
         gint resp = gtk_dialog_run(GTK_DIALOG(dialog));
         if (resp == GTK_RESPONSE_OK)
         {
-            //GtkWidget * label = gtk_label_new("Fichier Join");
-            //gtk_container_add (GTK_CONTAINER(window),label);
             gchar *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
             g_signal_connect(bouton, "clicked", G_CALLBACK(cp_system),path);
-            //open_image(path);
             gtk_widget_destroy(dialog);
         }
     }
@@ -137,11 +134,6 @@ void initialize_window(GtkWindow* fenetre)
     {
         gtk_window_iconify(fenetre);//iconifier
     }
-    GtkWidget *label = gtk_label_new("WhoIsWho");
-    //gtk_label_set_xalign (label,100);
-    //gtk_label_set_yalign (label,100);
-    gtk_container_add(GTK_CONTAINER(mainwindow),GTK_WIDGET(label));
-
 }
 
 /*int main(int argc, char **argv)
