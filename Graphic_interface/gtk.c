@@ -4,6 +4,9 @@
 # include <string.h>
 # include "../DataBase/base.h"
 
+EltDB *begin;
+GtkWidget *mainwindow;
+
 gchar* get_filename(gchar* name)
 {
     gchar *s = malloc(100*sizeof(gchar));
@@ -44,7 +47,6 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
 {
     if (bouton3)
     {
-        FILE* file = fopen("test1", "a");
         GtkWidget* dialog = gtk_file_chooser_dialog_new("Choose a file",
                                                         GTK_WINDOW(window),
                                                         GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -52,7 +54,6 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
                                                         GTK_STOCK_CANCEL,
                                                         GTK_RESPONSE_CANCEL,
                                                         NULL);
-        //gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),g_get_temp_dir());
         gtk_widget_show_all(dialog);
         gint resp = gtk_dialog_run(GTK_DIALOG(dialog));
         if (resp == GTK_RESPONSE_OK)
@@ -62,15 +63,11 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
             {
                 char str[100];
                 char *src = (char *)path;
-                char *dst = "img/faces/yalefacesgood";
+                char *dst = "img/faces";
                 sprintf(str, "cp -r %s %s", src, dst);
                 if (system(str))
                     printf("Error in cp");
-                EltDB *begin = malloc(sizeof(EltDB));
-                Update(begin);
-                ajout_eltDB(begin,get_filename(path));
-                fputs(get_filename(path), file);
-                fputc('\n', file);
+                //ajout_eltDB(begin, get_filename(path));
             }
             else
               printf("Bad format of: %s", get_filename(path));
@@ -79,8 +76,10 @@ void ajouter_img(GtkWidget *bouton3, gpointer window)
     }
 }
 
-void button_ajout(GtkWidget* window)
+void button_ajout(GtkWidget* window, EltDB *sent)
 {
+    begin = sent;
+    mainwindow = window;
     // INIT
     GtkWidget *bouton = gtk_button_new_with_label("Ajouter à la DATABASE");
     GtkWidget *bouton2 = gtk_button_new_with_label("       Detecter Visage       ");

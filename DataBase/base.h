@@ -14,7 +14,7 @@ void initializeEltDB(EltDB *begin);
 
 char* catstr(char* new, char str, char* s);
 
-void Update(EltDB *begin);
+EltDB* Initialize();
 
 int ajout_eltDB(EltDB *begin, gchar *filename);
 

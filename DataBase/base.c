@@ -10,33 +10,31 @@ void initializeEltDB(EltDB *begin)
 {
     EltDB *temp = begin;
     temp->eigen = 0;
-    begin->next = malloc(sizeof(EltDB));
-    begin->old = NULL;
-    begin = begin->next;
-    char *path = "../img/faces/yalefacesgood";  
+    temp->next = malloc(sizeof(EltDB));
+    temp->old = NULL;
+    temp = temp->next;
+    char *path = "img/faces";
     GDir* dir = g_dir_open(path, 0, NULL);
     G_CONST_RETURN gchar* file = g_dir_read_name(dir);
-    FILE *fichier = fopen("test","r+");
-    while (file != NULL && begin)
+    FILE *fichier = fopen("DataBase/test", "r+");
+    while (file != NULL && temp)
     {
-        (temp->eigen)++;
-        begin->name = (char*)file;
-        fputs(begin->name,fichier);
-        fputc('/',fichier);
-        fputs("2555",fichier);
-        fputc('\n',fichier);
-        begin->next = malloc(sizeof(EltDB));
-        begin = begin->next;
-        begin->old = begin;
+        (begin->eigen)++;
+        temp->name = (char *)file;
+        fputs(temp->name, fichier);
+        fputs("/2555\n", fichier);
+        temp->next = malloc(sizeof(EltDB));
+        temp->next->old = temp;
+        temp = temp->next;
         file = g_dir_read_name(dir);
     }
-    begin->next = NULL;
-    begin =temp;  
+    temp->next = NULL;
 }
-char* catstr(char* new,char str,char* s)
+
+char* catstr(char *new, char str, char *s)
 {
     int i = 0;
-    while(*new != '\0')
+    while (*new != '\0')
     {
         s[i] = *new;
         i++;
@@ -46,84 +44,76 @@ char* catstr(char* new,char str,char* s)
     s[i+1] = '\0';
     return s;
 }
-void Update(EltDB *begin)
+
+EltDB* Initialize()
 {
+    EltDB *begin = malloc(sizeof(EltDB));
+    begin->eigen = 0;
     EltDB *temp = begin;
-    temp->eigen = 0;
-    begin->next = malloc(sizeof(EltDB));
-    begin = begin->next;
+    temp->next = malloc(sizeof(EltDB));
+    temp->next->old = temp;
+    temp = temp->next;
+
     char s[99];
     char str;
     char *new = malloc(sizeof(char)*50);
     new = "";
-    FILE *fichier = fopen("test","r+");
-    FILE *file = fopen("test_final","r+");
-    while ((str = fgetc(fichier))!=EOF)
+
+    FILE *fichier = fopen("DataBase/test", "r+");
+    FILE *file = fopen("DataBase/test_final", "r+");
+
+    while ((str = fgetc(fichier)) != EOF)
     {      
-        if(str == '/')
+        if (str == '/')
         {
-            begin->name = new;
-            fputs(begin->name,file);
+            temp->name = new;
+            fputs(temp->name, file);
             fputc('/',file);
             new = "";
         }
-        else if(str == '\n')
+
+        else if (str == '\n')
         {   
-            (temp->eigen)++;
-            begin->next = malloc(sizeof(EltDB));
-            begin = begin->next;
-            begin->old = begin;
-            begin->eigen = atoi(new);
-            fprintf(file,"%d\n",begin->eigen);
+            (begin->eigen)++;
+            temp->next = malloc(sizeof(EltDB));
+            temp->next->old = temp;
+            temp = temp->next;
+            temp->eigen = atoi(new);
+            fprintf(file, "%d\n", temp->eigen);
             new = "";
         }
+
         else
-        {
-           new = catstr(new,str,s);   
-        }
+           new = catstr(new, str, s);
     }
-    begin->next = NULL;
-    begin = temp;   
+
+    temp->next = NULL;
+
+    return begin;
 }
 
 int ajout_eltDB(EltDB *begin, gchar *filename)
 {
-    FILE *file = fopen("test","a");
+    FILE *file = fopen("DataBase/test", "a");
     EltDB *temp = begin->next;
-    EltDB *new = malloc(sizeof(EltDB));
-    while(temp->next != NULL && strcmp(temp->name,filename)<0)
+    
+    while (temp->next != NULL && strcmp(temp->name, filename) != 0)
+        temp = temp->next;
+
+    if (strcmp(temp->name, filename) != 0)
     {
-        temp = temp->next;  
-    }
-    if(strcmp(temp->name,filename) != 0)
-    {
-        strcpy(new->name, filename);
-        new->next = temp;
-        temp->old = new;
+        temp->next = malloc(sizeof(EltDB));
+        temp->next->old = temp;
+        temp = temp->next;
+        temp->eigen = 2555;
+        strcpy(temp->name, filename);
         (begin->eigen)++;
-        fputs(new->name,file);
+        fputs(temp->name, file);
+        fprintf(file, "%d\n", temp->eigen);
         return 1;
     }
-    if(strcmp(temp->next->name,filename)!= 0)
-    {
-        strcpy(new->name,filename);
-        new->next = temp->next;
-        temp->next->old = new;
-        (begin->eigen)++;
-        fputs(new->name,file);
-        return 1;
-    }
-    if(strcmp(temp->name,filename) == strcmp(temp->next->name,filename))
-    {
-        return 0;
-    }
-    strcpy(new->name, filename);
-    fputs(new->name,file);
-    new->next = NULL;
-    new->old = temp->next;
-    (begin->eigen)++;
-    fputs(new->name,file);
-    return 1;
+
+    return 0;
 }
 
 /*int supp_eltDB(EltDB *begin, gchar *name)

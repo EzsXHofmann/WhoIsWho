@@ -6,6 +6,7 @@
 
 int main(int argc, char **argv)
 {
+    EltDB *begin = Initialize();
     //VARIABLE
     gtk_init(&argc, &argv);
     GtkWidget* MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
     g_signal_connect(G_OBJECT(MainWindow), "delete-event",
                      G_CALLBACK(gtk_main_quit), NULL);
      
-    button_ajout(MainWindow);
+    button_ajout(MainWindow, begin);
     return EXIT_SUCCESS;
  }
 
