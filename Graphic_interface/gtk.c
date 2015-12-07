@@ -59,7 +59,6 @@ void cp_system(GtkWidget *window, gpointer path)
             if (system(str))
               printf("Error in cp");
             ajout_eltDB(begin, get_filename(path));
-            printf("%s\n",(begin->next)->name);
         }
         else
             printf("Bad format of: %s\n", filename);

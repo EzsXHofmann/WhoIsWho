@@ -93,19 +93,7 @@ EltDB* Initialize()
 
     return begin;
 }
-
-void writelist(EltDB *begin)
-{
-    FILE *file = fopen("DataBase/test_final", "r+");
-    EltDB *tmp = begin->next;
-    while (tmp->next)
-    {
-        fputs(tmp->name, file);
-        fprintf(file, "/%d\n", tmp->eigen);
-        tmp = tmp->next;
-    }
-}
-
+   
 /*void ajout_eltDB(EltDB *begin, gchar *filename)
 {
     EltDB *temp = begin;

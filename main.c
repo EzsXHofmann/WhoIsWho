@@ -21,7 +21,6 @@ int main(int argc, char **argv)
                      G_CALLBACK(gtk_main_quit), NULL);
      
     button_ajout(MainWindow, begin);
-    writelist(begin);
     return EXIT_SUCCESS;
  }
 
