@@ -17,11 +17,12 @@ int main(int argc, char* argv[])
 {   
     
     if (argc != 2 || strlen(argv[1]) != 1
-                  || argv[1][0] < 49 || argv[1][0] > 50)
+                  || argv[1][0] < 49 || argv[1][0] > 52)
     {
         printf("Usage:\n%s <mode>\nMode:", argv[0]);
         printf("\n\t1: GUI\n");
         printf("\t2: Adaboost\n");
+        printf("\t3: Integrale Image/Haar Features\n");
         return 0;
     }
 
@@ -118,6 +119,34 @@ int main(int argc, char* argv[])
         free(matrix5);
        
         return 0; 
+    }
+
+    if (n == 3)
+    {
+        init_sdl();
+        SDL_Surface *img = load_image("img/homme.jpg");
+        
+        int *matrix = malloc(img->h*img->w*sizeof(int));
+        img_integrale(img, matrix);
+
+        printf("\n-------------------- Integral Image --------------------\n");
+
+        for (int i = 0; i < img->h; i++)
+        {  
+            int offset = i * img->w;
+            
+            for (int j = 0; j < img->w; j++)
+                printf("%5d ", matrix[offset + j]);
+
+            printf("\n");
+        }
+        
+        printf("--------------------------------------------------------\n");
+        
+        haarFeatures(matrix, img->w, img->h, "HAARCARACS");
+
+        SDL_FreeSurface(img);
+        free(matrix);
     }
 
     return 0;
