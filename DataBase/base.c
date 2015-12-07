@@ -49,6 +49,8 @@ EltDB* Initialize()
 {
     EltDB *begin = malloc(sizeof(EltDB));
     begin->eigen = 0;
+    begin->old = NULL;
+    begin->name = "SENTINELEZEZ";
     EltDB *temp = begin;
     temp->next = malloc(sizeof(EltDB));
     temp->next->old = temp;
@@ -92,16 +94,16 @@ EltDB* Initialize()
     return begin;
 }
 
-int ajout_eltDB(EltDB *begin, gchar *filename)
+void ajout_eltDB(EltDB *begin, gchar *filename)
 {
-    FILE *file = fopen("DataBase/test", "a");
-    EltDB *temp = begin->next;
+    EltDB *temp = begin;
     
     while (temp->next != NULL && strcmp(temp->name, filename) != 0)
         temp = temp->next;
 
     if (strcmp(temp->name, filename) != 0)
     {
+        FILE *file = fopen("DataBase/test", "a");
         temp->next = malloc(sizeof(EltDB));
         temp->next->old = temp;
         temp = temp->next;
@@ -110,10 +112,7 @@ int ajout_eltDB(EltDB *begin, gchar *filename)
         (begin->eigen)++;
         fputs(temp->name, file);
         fprintf(file, "%d\n", temp->eigen);
-        return 1;
     }
-
-    return 0;
 }
 
 /*int supp_eltDB(EltDB *begin, gchar *name)
