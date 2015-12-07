@@ -7,6 +7,16 @@
 EltDB *begin;
 GtkWidget *mainwindow;
 
+void open_image (gchar* path)
+{
+    GtkWidget* box = gtk_vbox_new(FALSE, 1);
+    GtkWidget* image = gtk_image_new_from_file(path);
+    gtk_box_pack_start(GTK_BOX (box), image, TRUE, TRUE, 0);
+    gtk_container_add(GTK_CONTAINER (mainwindow), box);
+    gtk_widget_show_all(mainwindow);
+}
+
+
 gchar* get_filename(gchar* name)
 {
     gchar *s = malloc(100*sizeof(gchar));
@@ -85,6 +95,7 @@ void ajouter_img(GtkWidget *window, gpointer bouton)
             //gtk_container_add (GTK_CONTAINER(window),label);
             gchar *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
             g_signal_connect(bouton, "clicked", G_CALLBACK(cp_system),path);
+            //open_image(path);
             gtk_widget_destroy(dialog);
         }
     }
@@ -126,6 +137,11 @@ void initialize_window(GtkWindow* fenetre)
     {
         gtk_window_iconify(fenetre);//iconifier
     }
+    GtkWidget *label = gtk_label_new("WhoIsWho");
+    //gtk_label_set_xalign (label,100);
+    //gtk_label_set_yalign (label,100);
+    gtk_container_add(GTK_CONTAINER(mainwindow),GTK_WIDGET(label));
+
 }
 
 /*int main(int argc, char **argv)

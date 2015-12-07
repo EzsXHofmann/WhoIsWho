@@ -11,7 +11,7 @@ int main(int argc, char **argv)
     gtk_init(&argc, &argv);
     GtkWidget* MainWindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     GtkWindow* fenetre = GTK_WINDOW(MainWindow);
-    
+ 
     //SETUP WINDOW
      
     initialize_window(fenetre);
