@@ -12,6 +12,7 @@
 #include "CASCADE/cascade.h"
 #include "DataBase/base.h"
 #include "Graphic_interface/gtk.h"
+
 int main(int argc, char* argv[])
 {   
     
@@ -24,9 +25,7 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    int n = strtoul(argv[2], NULL, 10);
-
-    init_sdl();
+    int n = strtoul(argv[1], NULL, 10);
 
     if (n == 1)
     {
