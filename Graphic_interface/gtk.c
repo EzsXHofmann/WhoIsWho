@@ -2,18 +2,20 @@
 # include <stdio.h>
 # include <gtk/gtk.h>
 # include <string.h>
+# include <SDL/SDL.h>
+# include <SDL/SDL_image.h>
+# include "../SDLIMAGE/basic_fun.h"
 # include "../DataBase/base.h"
 
 EltDB *begin;
 GtkWidget *mainwindow;
 
-void open_image (gchar* path)
+void open_image (gchar *path)
 {
-    GtkWidget* box = gtk_vbox_new(FALSE, 1);
-    GtkWidget* image = gtk_image_new_from_file(path);
-    gtk_box_pack_start(GTK_BOX (box), image, TRUE, TRUE, 0);
-    gtk_container_add(GTK_CONTAINER (mainwindow), box);
-    gtk_widget_show_all(mainwindow);
+    init_sdl();
+    SDL_Surface *img = load_image(path);
+    display_image(img);
+    SDL_FreeSurface(img);
 }
 
 
@@ -93,6 +95,7 @@ void ajouter_img(GtkWidget *window, gpointer bouton)
         {
             gchar *path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
             g_signal_connect(bouton, "clicked", G_CALLBACK(cp_system),path);
+            //open_image(path);
             gtk_widget_destroy(dialog);
         }
     }
